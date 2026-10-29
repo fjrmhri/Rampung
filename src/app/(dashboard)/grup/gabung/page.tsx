@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useGabungGrup } from "@/hooks/useGrup";
@@ -9,16 +9,10 @@ import { ArrowLeft, UserPlus, Loader2, KeyRound } from "lucide-react";
 function FormGabungGrup() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [kode, setKode] = useState("");
+  // Prefill dari /grup/gabung?kode=<kode>
+  const [kode, setKode] = useState(() => searchParams.get("kode") ?? "");
   const [nama, setNama] = useState("");
   const gabungGrup = useGabungGrup();
-
-  useEffect(() => {
-    const kodeParam = searchParams.get("kode");
-    if (kodeParam) {
-      setKode(kodeParam);
-    }
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
