@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 
 /**
  * Layout dashboard — memverifikasi sesi di sisi server sebagai
- * lapisan perlindungan kedua (middleware adalah lapisan pertama).
+ * lapisan perlindungan kedua (proxy adalah lapisan pertama).
  *
- * Jika karena sebab apapun middleware tidak memblokir request
+ * Jika karena sebab apapun proxy tidak memblokir request
  * tanpa sesi, layout ini akan menjadi safety net.
  */
 export default async function DashboardLayout({

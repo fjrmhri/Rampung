@@ -1,8 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};
+
 /**
- * Logika proxy — dipanggil dari middleware.ts di root proyek.
+ * Next.js 16 Proxy (sebelumnya: middleware).
  * Dijalankan sebelum setiap request — menangani refresh sesi Supabase
  * dan proteksi route dashboard.
  */

@@ -83,14 +83,13 @@ npm run test
 
 ```
 .
-├── middleware.ts               # Entry middleware Next.js, meneruskan ke src/proxy.ts
 ├── supabase/migrations/        # Skema database, RLS, dan RPC
 └── src/
-    ├── proxy.ts                # Refresh sesi Supabase dan proteksi route /dashboard
+    ├── proxy.ts                # Proxy Next.js: refresh sesi Supabase dan proteksi route /dashboard
     ├── app/
+    │   ├── page.tsx            # Route /: redirect ke /dashboard atau /login
     │   ├── (auth)/login/       # Halaman login dan konfirmasi email, server action auth
-    │   ├── (dashboard)/        # Layout terproteksi, daftar grup, halaman /grup/*
-    │   ├── dashboard/          # Route /dashboard (memakai ulang halaman (dashboard))
+    │   ├── (dashboard)/        # Layout terproteksi: /dashboard (daftar grup) dan /grup/*
     │   ├── auth/callback/      # Penukaran kode magic link menjadi sesi
     │   └── api/grup/           # POST buat grup, DELETE hapus grup
     ├── components/             # Form pengeluaran, rekap saldo, dan provider

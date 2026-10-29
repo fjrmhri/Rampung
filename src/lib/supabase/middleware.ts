@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 /**
  * updateSession — dipanggil dari src/proxy.ts.
  *
- * Fungsi ini membuat server client di konteks middleware agar Supabase
+ * Fungsi ini membuat server client di konteks proxy agar Supabase
  * bisa membaca cookie dari request DAN menuliskan token yang di-refresh
  * kembali ke response. Tanpa ini, session akan kadaluarsa diam-diam.
  */

@@ -25,7 +25,7 @@ export async function createClient() {
             });
           } catch {
             // setAll dipanggil dari Server Component — tidak bisa set cookie.
-            // Middleware yang mengurus refresh; abaikan error ini jika sudah ada middleware.
+            // Proxy (src/proxy.ts) yang mengurus refresh; error ini aman diabaikan.
           }
         },
       },
