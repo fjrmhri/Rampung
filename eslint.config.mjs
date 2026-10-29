@@ -10,6 +10,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Referensi desain (prototipe HTML + runtime), bukan kode aplikasi.
+    "design_handoff_rampung_redesign/**",
   ]),
 ]);
 

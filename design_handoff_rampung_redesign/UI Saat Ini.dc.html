@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Geist+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#fff;color:oklch(0.145 0 0);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}a{color:inherit}a:hover{color:oklch(0.145 0 0)}*{box-sizing:border-box}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;background:#fff">
+  <header style="position:sticky;top:0;z-index:50;border-bottom:1px solid oklch(0.922 0 0);background:rgba(255,255,255,0.8);backdrop-filter:blur(4px)">
+    <div style="max-width:1024px;margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px">
+      <span style="font-weight:700;letter-spacing:-0.025em">Rampung</span>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:14px;color:oklch(0.556 0 0)">fajar@contoh.com</span>
+        <button style="border-radius:10px;border:1px solid oklch(0.922 0 0);background:#fff;padding:6px 12px;font:500 12px Inter;color:oklch(0.145 0 0)">Keluar</button>
+      </div>
+    </div>
+  </header>
+  <main style="flex:1">
+    <div style="max-width:896px;margin:0 auto;padding:32px 16px;display:flex;flex-direction:column;gap:32px">
+      <a style="display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:oklch(0.556 0 0);text-decoration:none"><span style="width:16px;height:16px;background:currentColor;-webkit-mask:url(https://unpkg.com/lucide-static@0.469.0/icons/arrow-left.svg) center/contain no-repeat;mask:url(https://unpkg.com/lucide-static@0.469.0/icons/arrow-left.svg) center/contain no-repeat"></span>Kembali ke Dashboard</a>
+      <div style="border-radius:18px;border:1px solid oklch(0.922 0 0);padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:space-between;gap:16px">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px"><h1 style="margin:0;font-size:24px;line-height:32px;font-weight:700;letter-spacing:-0.025em">Liburan Bali 2026</h1><span style="display:inline-flex;align-items:center;gap:4px;border-radius:999px;background:oklch(0.205 0 0 / 0.1);padding:2px 10px;font-size:12px;font-weight:600;color:oklch(0.205 0 0)">Admin</span></div>
+          <p style="margin:4px 0 0;font-size:12px;color:oklch(0.556 0 0)">Dibuat pada 12 Oktober 2026</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px;border-radius:14px;border:1px solid oklch(0.922 0 0);background:oklch(0.97 0 0 / 0.4);padding:16px">
+            <div><p style="margin:0;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:oklch(0.556 0 0)">Kode Undangan</p><p style="margin:0;font:700 14px 'Geist Mono'">a1b2c3d4</p></div>
+            <button style="border-radius:10px;border:1px solid oklch(0.922 0 0);background:#fff;padding:6px 12px;font:500 12px Inter">Salin</button>
+          </div>
+          <button style="border-radius:14px;border:1px solid oklch(0.577 0.245 27.325 / 0.2);background:oklch(0.577 0.245 27.325 / 0.1);padding:8px 16px;font:600 12px Inter;color:oklch(0.577 0.245 27.325)">Hapus Grup</button>
+        </div>
+      </div>
+      <div style="border-radius:18px;border:1px solid oklch(0.922 0 0);padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 style="margin:0;font-size:18px;font-weight:700">Saldo Bersih Anggota</h2>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="border-radius:14px;background:rgba(245,158,11,.1);padding:6px 14px;font-size:12px;font-weight:600;color:#d97706">Penyelesaian Utang (Settlement)</span>
+            <span style="border-radius:999px;background:rgba(16,185,129,.1);padding:4px 12px;font-size:11px;font-weight:600;color:#059669">Real-time Live</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <sc-for list="{{ saldo }}" as="s" hint-placeholder-count="4">
+            <div style="padding:16px;border-radius:14px;border:1px solid {{ s.bd }};background:{{ s.bg }}">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:14px;font-weight:600">{{ s.nama }}</span><span style="font-size:10px;font-weight:700;color:{{ s.c }}">{{ s.label }}</span></div>
+              <p style="margin:0;font-size:18px;font-weight:800;color:{{ s.c }}">{{ s.txt }}</p>
+              <p style="margin:2px 0 0;font-size:11px;color:oklch(0.556 0 0)">{{ s.cap }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="border-radius:18px;border:1px solid oklch(0.922 0 0);padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.1);display:flex;flex-direction:column;gap:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 style="margin:0;font-size:18px;font-weight:700">Riwayat Pengeluaran (3)</h2>
+          <span style="border-radius:14px;background:oklch(0.205 0 0);color:oklch(0.985 0 0);padding:8px 16px;font-size:12px;font-weight:600">Tambah Pengeluaran</span>
+        </div>
+        <div style="border-radius:14px;border:1px solid oklch(0.922 0 0);padding:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><div style="display:flex;gap:8px;align-items:center"><h3 style="margin:0;font-size:16px;font-weight:700">Makan Siang Nasi Padang</h3><span style="border-radius:999px;background:oklch(0.205 0 0 / 0.1);padding:2px 8px;font-size:10px;font-weight:600">Sama Rata</span><span style="border-radius:999px;background:oklch(0.97 0 0);padding:2px 8px;font:10px 'Geist Mono';color:oklch(0.556 0 0)">v1</span></div>
+            <p style="margin:2px 0 0;font-size:12px;color:oklch(0.556 0 0)">Dibayar oleh <strong style="color:oklch(0.145 0 0);font-weight:500">Fajar</strong> • 14 Okt, 12.30</p></div>
+            <span style="font-size:16px;font-weight:700">Rp 240.000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const g = { bd: 'rgba(16,185,129,.3)', bg: 'rgba(16,185,129,.05)', c: '#059669', label: 'Piutang', cap: 'Berhak menerima pembayaran' };
+    const r = { bd: 'rgba(244,63,94,.3)', bg: 'rgba(244,63,94,.05)', c: '#e11d48', label: 'Utang', cap: 'Wajib membayar' };
+    return { saldo: [
+      { nama: 'Fajar', txt: 'Rp -70.000', ...r }, { nama: 'Budi', txt: 'Rp -10.000', ...r },
+      { nama: 'Sari', txt: '+Rp 140.000', ...g }, { nama: 'Dimas', txt: 'Rp -60.000', ...r } ] };
+  }
+}
+</script>
+</body>
+</html>

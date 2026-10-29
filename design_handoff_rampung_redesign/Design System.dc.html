@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Geist+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:oklch(0.982 0.006 85);color:oklch(0.23 0.015 60);font:400 15px/1.5 'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased}button,input{font:inherit;color:inherit}h1,h2,h3,p{margin:0}a{color:oklch(0.44 0.085 162)}a:hover{color:oklch(0.38 0.08 162)}@keyframes spin{to{transform:rotate(360deg)}}</style>
+</helmet>
+<div style="max-width:1200px;margin:0 auto;padding:56px clamp(16px,4vw,40px) 96px;display:flex;flex-direction:column;gap:56px">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <p style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.44 0.085 162)">Rampung · Design System · Arah "Buku Kas"</p>
+    <h1 style="font-size:clamp(32px,4vw,48px);line-height:1.05;font-weight:800;letter-spacing:-0.035em">Fondasi visual untuk mencatat dan melunasi patungan</h1>
+    <p style="font-size:16px;color:oklch(0.47 0.015 60);max-width:720px;text-wrap:pretty">Semua token ditulis dalam oklch agar langsung cocok dengan globals.css (Tailwind 4) yang sudah memakai oklch. Ikon tetap lucide-react. Font baru: Plus Jakarta Sans menggantikan Inter; Geist Mono tetap dipakai.</p>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Warna</h2>
+    <sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <h3 style="font-size:14px;font-weight:700;color:oklch(0.47 0.015 60)">{{ g.title }}</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+          <sc-for list="{{ g.items }}" as="c" hint-placeholder-count="4">
+            <div style="border:1px solid oklch(0.905 0.01 80);border-radius:12px;overflow:hidden;background:oklch(0.998 0.002 85)">
+              <div style="height:72px;background:{{ c.v }};border-bottom:1px solid oklch(0.905 0.01 80);display:flex;align-items:flex-end;padding:10px 12px;color:{{ c.on }};font-size:13px;font-weight:700">{{ c.sample }}</div>
+              <div style="padding:10px 12px;display:flex;flex-direction:column;gap:2px">
+                <p style="font-family:'Geist Mono',monospace;font-size:12px;font-weight:600">{{ c.token }}</p>
+                <p style="font-family:'Geist Mono',monospace;font-size:12px;color:oklch(0.47 0.015 60)">{{ c.v }}</p>
+                <p style="font-size:12px;color:oklch(0.47 0.015 60)">{{ c.use }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Tipografi</h2>
+    <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.905 0.01 80);border-radius:16px;overflow:hidden">
+      <sc-for list="{{ type }}" as="t" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;align-items:baseline;padding:16px 20px;border-top:1px solid oklch(0.93 0.008 85)">
+          <div><p style="font-family:'Geist Mono',monospace;font-size:12px;font-weight:600">{{ t.token }}</p><p style="font-size:12px;color:oklch(0.47 0.015 60)">{{ t.spec }}</p></div>
+          <p style="font-family:{{ t.ff }};font-size:{{ t.size }};font-weight:{{ t.w }};letter-spacing:{{ t.ls }};line-height:1.2">{{ t.sample }}</p>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:13px;color:oklch(0.47 0.015 60)">Ukuran teks minimum 12px (menghapus text-[10px] dan text-[11px]). Angka uang memakai font-variant-numeric: tabular-nums agar kolom nominal rata.</p>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Spacing (basis 4px)</h2>
+      <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.905 0.01 80);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ space }}" as="s" hint-placeholder-count="9">
+          <div style="display:flex;align-items:center;gap:12px"><span style="width:84px;font-family:'Geist Mono',monospace;font-size:12px">{{ s.t }}</span><span style="width:40px;font-size:12px;color:oklch(0.47 0.015 60)">{{ s.v }}</span><span style="height:12px;width:{{ s.v }};border-radius:3px;background:oklch(0.44 0.085 162 / 0.7)"></span></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Radius dan shadow</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px">
+        <sc-for list="{{ radius }}" as="r" hint-placeholder-count="5">
+          <div style="height:96px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);border-radius:{{ r.v }};padding:12px;display:flex;flex-direction:column;justify-content:flex-end"><p style="font-family:'Geist Mono',monospace;font-size:12px;font-weight:600">{{ r.t }}</p><p style="font-size:12px;color:oklch(0.47 0.015 60)">{{ r.v }} · {{ r.use }}</p></div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-top:8px">
+        <sc-for list="{{ shadows }}" as="r" hint-placeholder-count="3">
+          <div style="height:96px;border-radius:16px;background:oklch(0.998 0.002 85);box-shadow:{{ r.v }};padding:12px;display:flex;flex-direction:column;justify-content:flex-end"><p style="font-family:'Geist Mono',monospace;font-size:12px;font-weight:600">{{ r.t }}</p><p style="font-size:12px;color:oklch(0.47 0.015 60)">{{ r.use }}</p></div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Tombol</h2>
+    <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.905 0.01 80);border-radius:16px;padding:24px;overflow-x:auto">
+      <div style="display:grid;grid-template-columns:140px repeat(5,minmax(150px,1fr));gap:16px 20px;align-items:center;min-width:900px">
+        <span></span>
+        <span style="font-size:12px;font-weight:700;color:oklch(0.47 0.015 60)">Default</span><span style="font-size:12px;font-weight:700;color:oklch(0.47 0.015 60)">Hover</span><span style="font-size:12px;font-weight:700;color:oklch(0.47 0.015 60)">Focus</span><span style="font-size:12px;font-weight:700;color:oklch(0.47 0.015 60)">Disabled</span><span style="font-size:12px;font-weight:700;color:oklch(0.47 0.015 60)">Loading</span>
+
+        <span style="font-size:13px;font-weight:700">Primer</span>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.44 0.085 162);color:oklch(0.99 0.005 162);font-weight:700;font-size:14px">Buat Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.38 0.08 162);color:oklch(0.99 0.005 162);font-weight:700;font-size:14px">Buat Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.44 0.085 162);color:oklch(0.99 0.005 162);font-weight:700;font-size:14px;outline:2px solid oklch(0.44 0.085 162);outline-offset:2px">Buat Grup</button>
+        <button disabled="{{ true }}" style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.90 0.015 162);color:oklch(0.42 0.03 162);font-weight:700;font-size:14px">Buat Grup</button>
+        <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.44 0.085 162);color:oklch(0.99 0.005 162);font-weight:700;font-size:14px;opacity:.75"><span style="width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite"></span>Membuat Grup...</button>
+
+        <span style="font-size:13px;font-weight:700">Sekunder</span>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);font-weight:600;font-size:14px">Gabung Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.955 0.008 85);font-weight:600;font-size:14px">Gabung Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);font-weight:600;font-size:14px;outline:2px solid oklch(0.44 0.085 162);outline-offset:2px">Gabung Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.905 0.01 80);background:oklch(0.97 0.006 85);color:oklch(0.50 0.012 60);font-weight:600;font-size:14px">Gabung Grup</button>
+        <span style="font-size:13px;color:oklch(0.47 0.015 60)">Tidak dipakai</span>
+
+        <span style="font-size:13px;font-weight:700">Aksen (Settlement)</span>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.85 0.07 80);background:oklch(0.95 0.045 85);color:oklch(0.40 0.09 65);font-weight:700;font-size:14px">Settlement</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.85 0.07 80);background:oklch(0.92 0.06 85);color:oklch(0.40 0.09 65);font-weight:700;font-size:14px">Settlement</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:1px solid oklch(0.85 0.07 80);background:oklch(0.95 0.045 85);color:oklch(0.40 0.09 65);font-weight:700;font-size:14px;outline:2px solid oklch(0.44 0.085 162);outline-offset:2px">Settlement</button>
+        <span style="font-size:13px;color:oklch(0.47 0.015 60)">Tidak dipakai</span><span style="font-size:13px;color:oklch(0.47 0.015 60)">Tidak dipakai</span>
+
+        <span style="font-size:13px;font-weight:700">Bahaya</span>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.50 0.18 27);color:oklch(0.99 0.005 85);font-weight:700;font-size:14px">Hapus Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.44 0.17 27);color:oklch(0.99 0.005 85);font-weight:700;font-size:14px">Hapus Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.50 0.18 27);color:oklch(0.99 0.005 85);font-weight:700;font-size:14px;outline:2px solid oklch(0.50 0.18 27);outline-offset:2px">Hapus Grup</button>
+        <button style="min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.92 0.03 27);color:oklch(0.45 0.10 27);font-weight:700;font-size:14px">Hapus Grup</button>
+        <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;border:none;background:oklch(0.50 0.18 27);color:oklch(0.99 0.005 85);font-weight:700;font-size:14px;opacity:.75"><span style="width:14px;height:14px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite"></span>Menghapus...</button>
+
+        <span style="font-size:13px;font-weight:700">Ikon (40px)</span>
+        <button aria-label="Edit" style="width:40px;height:40px;display:grid;place-items:center;border:none;border-radius:10px;background:transparent;color:oklch(0.47 0.015 60)"><dc-import name="Ikon" n="pen-line" hint-size="17px,17px" style="display:inline-block;width:17px;height:17px"></dc-import></button>
+        <button aria-label="Edit" style="width:40px;height:40px;display:grid;place-items:center;border:none;border-radius:10px;background:oklch(0.955 0.008 85);color:oklch(0.44 0.085 162)"><dc-import name="Ikon" n="pen-line" hint-size="17px,17px" style="display:inline-block;width:17px;height:17px"></dc-import></button>
+        <button aria-label="Edit" style="width:40px;height:40px;display:grid;place-items:center;border:none;border-radius:10px;background:transparent;color:oklch(0.47 0.015 60);outline:2px solid oklch(0.44 0.085 162);outline-offset:1px"><dc-import name="Ikon" n="pen-line" hint-size="17px,17px" style="display:inline-block;width:17px;height:17px"></dc-import></button>
+        <span style="font-size:13px;color:oklch(0.47 0.015 60)">Tidak dipakai</span><span style="font-size:13px;color:oklch(0.47 0.015 60)">Tidak dipakai</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Input</h2>
+      <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.905 0.01 80);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:14px">Default</label><input placeholder="Contoh: Liburan Bali 2026, Kos Melati" style="height:46px;padding:0 14px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);font-size:15px"></input></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:14px">Focus</label><input value="Kos Melati" style="height:46px;padding:0 14px;border-radius:10px;border:1px solid oklch(0.44 0.085 162);box-shadow:0 0 0 3px oklch(0.44 0.085 162 / 0.2);background:oklch(0.998 0.002 85);font-size:15px;outline:none"></input></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:14px">Error</label><input value="" placeholder="Deskripsi" aria-invalid="true" style="height:46px;padding:0 14px;border-radius:10px;border:1px solid oklch(0.50 0.18 27);box-shadow:0 0 0 3px oklch(0.50 0.18 27 / 0.15);background:oklch(0.998 0.002 85);font-size:15px"></input><p style="display:flex;gap:6px;align-items:center;font-size:13px;font-weight:600;color:oklch(0.47 0.18 27)"><dc-import name="Ikon" n="triangle-alert" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Deskripsi pengeluaran wajib diisi</p></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:14px;color:oklch(0.50 0.012 60)">Disabled</label><input disabled="{{ true }}" value="a1b2c3d4" style="height:46px;padding:0 14px;border-radius:10px;border:1px solid oklch(0.905 0.01 80);background:oklch(0.97 0.006 85);color:oklch(0.50 0.012 60);font-family:'Geist Mono',monospace;font-size:15px"></input></div>
+        <div style="display:flex;flex-direction:column;gap:8px"><label style="font-weight:600;font-size:14px">Nominal dengan prefiks</label><div style="position:relative"><span style="position:absolute;left:14px;top:13px;font-weight:700;color:oklch(0.47 0.015 60)">Rp</span><input value="240.000" style="width:100%;height:46px;padding:0 14px 0 44px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);font-size:17px;font-weight:800"></input></div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Badge, status, notifikasi</h2>
+      <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.905 0.01 80);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:oklch(0.945 0.03 162);color:oklch(0.38 0.08 162);font-size:12px;font-weight:700"><dc-import name="Ikon" n="shield-check" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Admin</span>
+          <span style="padding:2px 8px;border-radius:6px;background:oklch(0.95 0.045 85);color:oklch(0.40 0.09 65);font-size:12px;font-weight:700">Pemilik</span>
+          <span style="padding:2px 8px;border-radius:6px;background:oklch(0.945 0.03 162);color:oklch(0.38 0.08 162);font-size:12px;font-weight:700">Sama Rata</span>
+          <span style="padding:2px 6px;border-radius:6px;background:oklch(0.955 0.008 85);color:oklch(0.47 0.015 60);font-family:'Geist Mono',monospace;font-size:12px">v2</span>
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;background:oklch(0.95 0.035 150);color:oklch(0.40 0.10 150);font-size:12px;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:oklch(0.55 0.14 150)"></span>Real-time Live</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:16px">
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:oklch(0.42 0.11 150)"><dc-import name="Ikon" n="trending-up" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Piutang +Rp 140.000</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:oklch(0.48 0.13 45)"><dc-import name="Ikon" n="trending-down" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Utang −Rp 70.000</span>
+          <span style="display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;color:oklch(0.47 0.015 60)"><dc-import name="Ikon" n="scale" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Imbang Rp 0</span>
+        </div>
+        <div role="alert" style="display:flex;gap:10px;padding:12px 14px;border-radius:10px;border:1px solid oklch(0.86 0.07 27);background:oklch(0.955 0.03 27);color:oklch(0.47 0.18 27);font-size:14px"><dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Total persentase harus 100% (saat ini: 90.0%)</span></div>
+        <div role="status" style="display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:oklch(0.95 0.035 150);color:oklch(0.38 0.10 150);font-size:14px;font-weight:600"><dc-import name="Ikon" n="circle-check" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Pembagian valid &amp; total tanggungan sesuai.</span></div>
+        <div style="display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:oklch(0.955 0.008 85);color:oklch(0.40 0.015 60);font-size:14px"><dc-import name="Ikon" n="info" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Info netral, misalnya catatan pembuat grup.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <h2 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Kartu, navigasi, modal, kosong, loading</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:13px;font-weight:700;color:oklch(0.47 0.015 60)">Kartu grup (default dan hover)</p>
+        <div style="padding:20px;border-radius:16px;border:1px solid oklch(0.905 0.01 80);background:oklch(0.998 0.002 85);display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between"><div><p style="font-size:17px;font-weight:800">Kos Melati</p><p style="font-size:13px;color:oklch(0.47 0.015 60)">3 anggota</p></div><dc-import name="Ikon" n="chevron-right" hint-size="18px,18px" style="display:inline-block;width:18px;height:18px;color:oklch(0.47 0.015 60)"></dc-import></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid oklch(0.93 0.008 85);font-size:13px;color:oklch(0.47 0.015 60)"><span>Kode: <strong style="font-family:'Geist Mono',monospace;color:oklch(0.23 0.015 60)">k9m2x7q1</strong></span><span>2 Sep</span></div>
+        </div>
+        <div style="padding:20px;border-radius:16px;border:1px solid oklch(0.44 0.085 162 / 0.5);background:oklch(0.998 0.002 85);box-shadow:0 10px 24px -14px oklch(0.23 0.015 60 / 0.25);transform:translateY(-1px);display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between"><div><p style="font-size:17px;font-weight:800">Liburan Bali 2026</p><p style="font-size:13px;color:oklch(0.47 0.015 60)">4 anggota</p></div><dc-import name="Ikon" n="chevron-right" hint-size="18px,18px" style="display:inline-block;width:18px;height:18px;color:oklch(0.44 0.085 162)"></dc-import></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid oklch(0.93 0.008 85);font-size:13px;color:oklch(0.47 0.015 60)"><span>Kode: <strong style="font-family:'Geist Mono',monospace;color:oklch(0.23 0.015 60)">a1b2c3d4</strong></span><span>12 Okt</span></div>
+        </div>
+        <p style="font-size:13px;font-weight:700;color:oklch(0.47 0.015 60);margin-top:8px">Navigasi atas</p>
+        <div style="height:64px;padding:0 20px;border-radius:12px;border:1px solid oklch(0.905 0.01 80);background:oklch(0.982 0.006 85);display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <span style="display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-0.02em"><span style="width:12px;height:12px;border-radius:3px;background:oklch(0.44 0.085 162)"></span>Rampung</span>
+          <span style="display:flex;align-items:center;gap:12px;font-size:14px;color:oklch(0.47 0.015 60)">fajar@contoh.com<span style="min-height:40px;display:inline-flex;align-items:center;padding:0 14px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);background:oklch(0.998 0.002 85);font-weight:600;font-size:13px;color:oklch(0.23 0.015 60)">Keluar</span></span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:13px;font-weight:700;color:oklch(0.47 0.015 60)">Modal konfirmasi</p>
+        <div style="padding:24px;border-radius:16px;background:oklch(0.23 0.015 60 / 0.5)">
+          <div role="dialog" style="background:oklch(0.998 0.002 85);border-radius:16px;padding:24px;box-shadow:0 24px 48px -16px oklch(0.23 0.015 60 / 0.35);display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:oklch(0.955 0.03 27);color:oklch(0.50 0.18 27)"><dc-import name="Ikon" n="trash-2" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px"></dc-import></div><h3 style="font-size:18px;font-weight:800">Hapus Pengeluaran?</h3></div>
+            <p style="font-size:14px;color:oklch(0.47 0.015 60)">Apakah Anda yakin ingin menghapus catatan pengeluaran ini? Tindakan ini tidak dapat dibatalkan.</p>
+            <div style="display:flex;justify-content:flex-end;gap:8px"><span style="min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:10px;border:1px solid oklch(0.83 0.012 80);font-weight:600;font-size:14px">Batal</span><span style="min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:10px;background:oklch(0.50 0.18 27);color:oklch(0.99 0.005 85);font-weight:700;font-size:14px">Hapus</span></div>
+          </div>
+        </div>
+        <p style="font-size:13px;font-weight:700;color:oklch(0.47 0.015 60);margin-top:8px">Kosong dan loading</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="border:1.5px dashed oklch(0.83 0.012 80);border-radius:12px;padding:20px 12px;text-align:center;font-size:13px;color:oklch(0.47 0.015 60)">Belum ada pengeluaran dicatat di grup ini.</div>
+          <div style="border:1px solid oklch(0.905 0.01 80);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;background:oklch(0.998 0.002 85)"><div style="height:14px;width:60%;border-radius:6px;background:oklch(0.93 0.008 85)"></div><div style="height:10px;width:40%;border-radius:6px;background:oklch(0.93 0.008 85)"></div><div style="height:10px;width:80%;border-radius:6px;background:oklch(0.93 0.008 85)"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const W = 'oklch(0.99 0.005 162)', I = 'oklch(0.23 0.015 60)';
+    const c = (token, v, use, on, sample) => ({ token, v, use, on: on || I, sample: sample || 'Aa' });
+    return {
+      groups: [
+        { title: 'Primer dan sekunder', items: [
+          c('--primary', 'oklch(0.44 0.085 162)', 'Aksi utama, tautan, fokus. Teks putih ≈7.5:1', W),
+          c('--primary-hover', 'oklch(0.38 0.08 162)', 'Hover tombol primer', W),
+          c('--primary-soft', 'oklch(0.945 0.03 162)', 'Badge, ikon tile, baris terpilih', 'oklch(0.38 0.08 162)'),
+          c('--accent', 'oklch(0.95 0.045 85)', 'Settlement, Pemilik. Teks oklch(0.40 0.09 65) ≈8:1', 'oklch(0.40 0.09 65)'),
+          c('--accent-strong', 'oklch(0.62 0.12 75)', 'Ikon dekoratif (sparkles), bukan teks', I) ] },
+        { title: 'Netral (hangat)', items: [
+          c('--background', 'oklch(0.982 0.006 85)', 'Latar halaman'),
+          c('--card', 'oklch(0.998 0.002 85)', 'Permukaan kartu, input'),
+          c('--muted', 'oklch(0.955 0.008 85)', 'Hover sekunder, chip pembagian'),
+          c('--border', 'oklch(0.905 0.01 80)', 'Garis kartu'),
+          c('--input', 'oklch(0.83 0.012 80)', 'Garis input dan tombol sekunder'),
+          c('--muted-foreground', 'oklch(0.47 0.015 60)', 'Teks sekunder ≈6.5:1', W),
+          c('--foreground', 'oklch(0.23 0.015 60)', 'Teks utama ≈16:1', W) ] },
+        { title: 'Status saldo', items: [
+          c('--positive', 'oklch(0.42 0.11 150)', 'Piutang, Lunas ≈7:1 di atas soft', W),
+          c('--positive-soft', 'oklch(0.95 0.035 150)', 'Latar piutang, sukses', 'oklch(0.40 0.10 150)'),
+          c('--negative', 'oklch(0.48 0.13 45)', 'Utang (terakota) ≈5.9:1 di atas soft', W),
+          c('--negative-soft', 'oklch(0.965 0.02 45)', 'Latar utang', 'oklch(0.48 0.13 45)') ] },
+        { title: 'Umpan balik', items: [
+          c('--destructive', 'oklch(0.50 0.18 27)', 'Hapus, error. Teks putih ≈5.6:1', W),
+          c('--destructive-soft', 'oklch(0.955 0.03 27)', 'Banner error, teks oklch(0.47 0.18 27) ≈6:1', 'oklch(0.47 0.18 27)'),
+          c('--warning', 'oklch(0.58 0.12 70)', 'Ikon anggota Tanpa Akun (non-teks)', I),
+          c('--ring', 'oklch(0.44 0.085 162)', 'Outline fokus 2px, offset 2px', W) ] } ],
+      type: [
+        { token: 'display', spec: '32–34 / 800 / -0.03em', size: '34px', w: 800, ls: '-0.03em', ff: "'Plus Jakarta Sans'", sample: 'Liburan Bali 2026' },
+        { token: 'h1', spec: '26–32 / 800 / -0.025em', size: '28px', w: 800, ls: '-0.025em', ff: "'Plus Jakarta Sans'", sample: 'Daftar Grup' },
+        { token: 'h2', spec: '18 / 800 / -0.01em', size: '18px', w: 800, ls: '-0.01em', ff: "'Plus Jakarta Sans'", sample: 'Saldo Bersih Anggota' },
+        { token: 'amount-lg', spec: '22–28 / 800 / tabular', size: '24px', w: 800, ls: '-0.02em', ff: "'Plus Jakarta Sans'", sample: '+Rp 140.000' },
+        { token: 'body', spec: '15 / 400 / 1.5', size: '15px', w: 400, ls: '0', ff: "'Plus Jakarta Sans'", sample: 'Kelola pengeluaran bersama dan pantau penyelesaian utang' },
+        { token: 'label', spec: '14 / 600', size: '14px', w: 600, ls: '0', ff: "'Plus Jakarta Sans'", sample: 'Deskripsi Pengeluaran' },
+        { token: 'caption', spec: '12–13 / 500–700', size: '13px', w: 500, ls: '0', ff: "'Plus Jakarta Sans'", sample: 'Dibayar oleh Fajar · 14 Okt, 12.30' },
+        { token: 'mono', spec: 'Geist Mono 15–24 / 600', size: '20px', w: 600, ls: '0.06em', ff: "'Geist Mono'", sample: 'a1b2c3d4' } ],
+      space: [['--space-1', '4px'], ['--space-2', '8px'], ['--space-3', '12px'], ['--space-4', '16px'], ['--space-5', '20px'], ['--space-6', '24px'], ['--space-8', '32px'], ['--space-10', '40px'], ['--space-14', '56px']].map(([t, v]) => ({ t, v })),
+      radius: [['--radius-xs', '6px', 'chip, badge'], ['--radius-sm', '8px', 'input kecil'], ['--radius-md', '10px', 'tombol, input'], ['--radius-lg', '12px', 'item list'], ['--radius-xl', '16px', 'kartu, modal']].map(([t, v, use]) => ({ t, v, use })),
+      shadows: [
+        { t: '--shadow-xs', v: '0 1px 2px oklch(0.23 0.015 60 / 0.04), 0 0 0 1px oklch(0.905 0.01 80)', use: 'Kartu diam' },
+        { t: '--shadow-md', v: '0 10px 24px -14px oklch(0.23 0.015 60 / 0.25), 0 0 0 1px oklch(0.905 0.01 80)', use: 'Hover kartu, ringkasan' },
+        { t: '--shadow-lg', v: '0 24px 48px -16px oklch(0.23 0.015 60 / 0.35)', use: 'Modal' } ],
+    };
+  }
+}
+</script>
+</body>
+</html>

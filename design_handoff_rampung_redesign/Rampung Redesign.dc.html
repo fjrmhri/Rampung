@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Geist+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:oklch(0.95 0.008 85);color:oklch(0.23 0.015 60);font:400 15px/1.55 'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased}h1,h2,h3,p,ol,ul{margin:0}a{color:oklch(0.44 0.085 162);font-weight:700}a:hover{color:oklch(0.38 0.08 162)}td,th{text-align:left;vertical-align:top}</style>
+</helmet>
+<div style="width:1960px;padding:72px 80px 120px;display:flex;flex-direction:column;gap:72px">
+
+<section id="1" style="display:grid;grid-template-columns:minmax(0,1fr) 760px;gap:56px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:28px">
+    <p style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.44 0.085 162)">Redesain Rampung · fjrmhri/Rampung@main</p>
+    <h1 style="font-size:56px;line-height:1.02;font-weight:800;letter-spacing:-0.04em;max-width:900px">1. Ringkasan analisis</h1>
+    <ol style="padding-left:22px;display:flex;flex-direction:column;gap:14px;font-size:17px;max-width:1000px;text-wrap:pretty">
+      <li><strong>Tujuan:</strong> mencatat pengeluaran bersama dalam grup, menghitung saldo bersih real-time, dan menyarankan transaksi pelunasan seminimal mungkin (README).</li>
+      <li><strong>Audiens (asumsi):</strong> kelompok teman, penghuni kos, atau rombongan liburan di Indonesia yang patungan. Disimpulkan dari placeholder "Liburan Bali 2026", "Kos Melati", "patungan", serta fitur anggota tanpa akun. Penggunaan diasumsikan dominan di ponsel.</li>
+      <li><strong>Halaman:</strong> Login, Verifikasi email, Dashboard (Daftar Grup), Buat Grup, Gabung Grup, Detail Grup, Tambah dan Edit Pengeluaran (FormPengeluaran), Settlement (RekapSaldo, Riwayat Pelunasan). Komponen bersama: navbar di layout dashboard, kartu, banner error, modal konfirmasi, dialog konflik versi.</li>
+      <li><strong>Warna tanpa peran:</strong> --primary bernilai abu hampir hitam, sehingga badge "bg-primary/10 text-primary" menjadi abu di atas abu. Warna status (emerald, rose, amber) dipakai langsung dari palet Tailwind, tidak lewat token.</li>
+      <li><strong>Hierarki datar:</strong> Detail Grup menumpuk empat kartu berbobot sama. Aksi terpenting (Tambah Pengeluaran, Settlement) berukuran text-xs dan terselip di header kartu; Hapus Grup justru tampil di header utama.</li>
+      <li><strong>Tipografi dan spacing:</strong> banyak text-[10px] dan text-[11px] di bawah batas keterbacaan; radius campur (rounded-lg, xl, 2xl); ada emoji di Buat Grup; jenis split mentah ("sama_rata") tampil di RekapSaldo.</li>
+      <li><strong>Aksesibilitas:</strong> tombol ikon edit/hapus hanya memakai title tanpa aria-label; modal tanpa role="dialog"; teks amber-600 dan emerald-600 di latar tipis mendekati 3:1; label "Berakun"/"Tanpa Akun" disembunyikan di mobile sehingga status hanya dibedakan warna ikon.</li>
+      <li><strong>Responsivitas dan alur:</strong> baris settlement dan riwayat pelunasan tidak wrap di layar sempit; loading hanya spinner tanpa kerangka; form pengeluaran menaruh tombol simpan jauh di bawah daftar anggota yang bisa di-scroll sendiri (max-h-60).</li>
+    </ol>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <p style="font-size:13px;font-weight:700;color:oklch(0.47 0.015 60)">Rekreasi UI saat ini (Detail Grup, desktop) dari kode repo · <a href="UI Saat Ini.dc.html">buka</a></p>
+    <div style="width:760px;height:620px;overflow:hidden;border-radius:12px;border:1px solid oklch(0.88 0.01 80);background:#fff">
+      <iframe src="UI Saat Ini.dc.html" title="UI saat ini" style="width:1440px;height:1180px;border:0;transform:scale(0.5278);transform-origin:0 0"></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="2" style="display:flex;flex-direction:column;gap:28px">
+  <h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">2. Dua arah desain</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+    <div style="background:oklch(0.998 0.002 85);border:2px solid oklch(0.44 0.085 162);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:26px;font-weight:800;letter-spacing:-0.02em">A. Buku Kas</h3><span style="padding:4px 12px;border-radius:999px;background:oklch(0.44 0.085 162);color:oklch(0.99 0.005 162);font-size:13px;font-weight:700">Dipilih</span></div>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60);text-wrap:pretty"><strong style="color:oklch(0.23 0.015 60)">Mood:</strong> hangat, rapi, tepercaya, seperti buku kas yang dicatat bersama. Kertas krem lembut, tinta hijau tua untuk aksi, terakota untuk utang, hijau daun untuk piutang, kuning tanah untuk settlement.</p>
+      <div style="display:flex;gap:8px"><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.982 0.006 85);border:1px solid oklch(0.88 0.01 80)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.23 0.015 60)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.44 0.085 162)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.95 0.045 85)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.48 0.13 45)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.42 0.11 150)"></span></div>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60)"><strong style="color:oklch(0.23 0.015 60)">Tipografi:</strong> Plus Jakarta Sans (judul 800, isi 400–600) + Geist Mono untuk kode undangan.</p>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60);text-wrap:pretty"><strong style="color:oklch(0.23 0.015 60)">Alasan:</strong> Plus Jakarta Sans dirancang di Indonesia dan nyaman untuk angka besar. Palet hangat cocok untuk urusan uang antarteman: serius tanpa terasa seperti aplikasi bank. Utang memakai terakota, bukan merah alarm, sehingga tidak terkesan menghakimi, dan tetap berbeda jelas dari merah untuk aksi destruktif.</p>
+    </div>
+    <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.88 0.01 80);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:18px">
+      <h3 style="font-size:26px;font-weight:800;letter-spacing:-0.02em">B. Lembar Kerja Tenang</h3>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60);text-wrap:pretty"><strong style="color:oklch(0.23 0.015 60)">Mood:</strong> dingin, padat, analitis. Netral slate, biru tegas sebagai primer, tabel dan angka rata kanan mendominasi.</p>
+      <div style="display:flex;gap:8px"><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.98 0.004 250);border:1px solid oklch(0.88 0.01 250)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.22 0.02 255)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.50 0.13 255)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.55 0.13 200)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.55 0.15 20)"></span><span style="width:64px;height:64px;border-radius:12px;background:oklch(0.55 0.13 150)"></span></div>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60)"><strong style="color:oklch(0.23 0.015 60)">Tipografi:</strong> IBM Plex Sans + IBM Plex Mono.</p>
+      <p style="font-size:16px;color:oklch(0.40 0.015 60);text-wrap:pretty"><strong style="color:oklch(0.23 0.015 60)">Alasan tidak dipilih:</strong> kuat untuk rekap dan ekspor, tetapi terasa seperti alat akuntansi kantor. Untuk grup teman yang mayoritas membuka di ponsel, kepadatan tabel menurunkan keterbacaan.</p>
+    </div>
+  </div>
+</section>
+
+<section id="3" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:baseline;gap:20px"><h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">3. Design system</h2><a href="Design System.dc.html">Buka halaman penuh</a></div>
+  <div style="width:1800px;height:1500px;border-radius:16px;overflow:hidden;border:1px solid oklch(0.88 0.01 80);background:oklch(0.982 0.006 85)">
+    <iframe src="Design System.dc.html" title="Design system" style="width:1800px;height:1500px;border:0"></iframe>
+  </div>
+</section>
+
+<section id="4" style="display:flex;flex-direction:column;gap:40px">
+  <div style="display:flex;flex-direction:column;gap:8px"><h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">4. Halaman utama: desktop 1440 dan mobile 375</h2><p style="font-size:16px;color:oklch(0.47 0.015 60)">Setiap frame adalah prototipe <a href="Rampung.dc.html">Rampung.dc.html</a> yang sama dan bisa diklik. Layout memakai flex-wrap dan grid auto-fill sehingga menyesuaikan lebar tanpa media query.</p></div>
+  <sc-for list="{{ pages }}" as="f" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:baseline;gap:16px"><h3 style="font-size:24px;font-weight:800">{{ f.label }}</h3><span style="font-family:'Geist Mono',monospace;font-size:13px;color:oklch(0.47 0.015 60)">{{ f.route }}</span></div>
+      <div style="display:flex;gap:40px;align-items:flex-start">
+        <iframe data-auto="1" src="{{ f.src }}" title="{{ f.label }} desktop" loading="lazy" style="width:1440px;height:900px;border:1px solid oklch(0.88 0.01 80);border-radius:12px;background:oklch(0.982 0.006 85);flex:none"></iframe>
+        <iframe data-auto="1" src="{{ f.src }}" title="{{ f.label }} mobile" loading="lazy" style="width:375px;height:812px;border:1px solid oklch(0.88 0.01 80);border-radius:24px;background:oklch(0.982 0.006 85);flex:none"></iframe>
+      </div>
+    </div>
+  </sc-for>
+</section>
+
+<section id="4b" style="display:flex;flex-direction:column;gap:24px">
+  <div style="display:flex;flex-direction:column;gap:8px"><h2 style="font-size:32px;font-weight:800;letter-spacing:-0.02em">State interaktif (mobile 375)</h2><p style="font-size:16px;color:oklch(0.47 0.015 60)">Kosong, loading, error, disabled, dan modal. Hover dan focus ada di design system dan aktif di prototipe.</p></div>
+  <div style="display:flex;flex-wrap:wrap;gap:32px">
+    <sc-for list="{{ states }}" as="f" hint-placeholder-count="6">
+      <div style="display:flex;flex-direction:column;gap:10px;width:375px">
+        <p style="font-size:14px;font-weight:700">{{ f.label }}</p>
+        <iframe data-auto="{{ f.auto }}" src="{{ f.src }}" title="{{ f.label }}" loading="lazy" style="width:375px;height:760px;border:1px solid oklch(0.88 0.01 80);border-radius:24px;background:oklch(0.982 0.006 85)"></iframe>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="5" style="display:flex;flex-direction:column;gap:28px">
+  <h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">5. Catatan handoff</h2>
+  <div style="background:oklch(0.998 0.002 85);border:1px solid oklch(0.88 0.01 80);border-radius:16px;overflow:hidden">
+    <table style="width:100%;border-collapse:collapse;font-size:15px">
+      <thead><tr style="background:oklch(0.955 0.008 85)"><th style="padding:14px 20px;width:300px">Komponen desain</th><th style="padding:14px 20px;width:560px">File/komponen di repo</th><th style="padding:14px 20px">Perubahan yang dibutuhkan</th></tr></thead>
+      <tbody>
+        <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="10">
+          <tr style="border-top:1px solid oklch(0.93 0.008 85)"><td style="padding:14px 20px;font-weight:700">{{ h.k }}</td><td style="padding:14px 20px;font-family:'Geist Mono',monospace;font-size:13px;color:oklch(0.40 0.015 60)">{{ h.f }}</td><td style="padding:14px 20px;text-wrap:pretty">{{ h.c }}</td></tr>
+        </sc-for>
+      </tbody>
+    </table>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h3 style="font-size:22px;font-weight:800">Token CSS (ganti blok :root di src/app/globals.css)</h3>
+      <pre style="margin:0;padding:24px;border-radius:16px;background:oklch(0.23 0.015 60);color:oklch(0.95 0.008 85);font:400 13px/1.65 'Geist Mono',monospace;white-space:pre-wrap">{{ css }}</pre>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h3 style="font-size:22px;font-weight:800">Urutan implementasi</h3>
+        <ol style="padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:16px;text-wrap:pretty">
+          <sc-for list="{{ order }}" as="o" hint-placeholder-count="7"><li>{{ o }}</li></sc-for>
+        </ol>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <h3 style="font-size:22px;font-weight:800">Library dan aset</h3>
+        <ul style="padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:16px;text-wrap:pretty">
+          <li>Tidak ada library baru. Font Plus Jakarta Sans dimuat lewat next/font/google (pengganti Inter di src/app/layout.tsx).</li>
+          <li>Ikon tetap lucide-react. Nama baru: LoaderCircle, CirclePlus, PenLine, CircleCheck, TriangleAlert, ChartPie, Banknote (menggantikan DollarSign karena mata uang Rupiah), Info (menggantikan emoji), LogOut, Mail.</li>
+          <li>Disarankan memecah pola berulang menjadi komponen kecil di src/components/ui (Button, Card, Alert, Dialog, Badge) agar kelas Tailwind tidak diulang.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="6" style="display:flex;flex-direction:column;gap:20px;max-width:1100px">
+  <h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">6. Rekomendasi di luar cakupan</h2>
+  <p style="font-size:16px;color:oklch(0.47 0.015 60)">Ketiganya sudah didesain di <a href="#7">bagian 7</a> dan aktif di prototipe.</p>
+  <ol style="padding-left:22px;display:flex;flex-direction:column;gap:12px;font-size:17px;text-wrap:pretty">
+    <li>Dialog konfirmasi sebelum "Tandai Lunas", karena saat ini satu klik langsung mencatat pelunasan dan tidak ada aksi batal.</li>
+    <li>Tombol "Bagikan tautan undangan" yang menyalin /grup/gabung?kode=..., memanfaatkan prefill yang sudah didukung halaman Gabung Grup.</li>
+    <li>Mode gelap: token .dark sudah ada di globals.css; bisa dipetakan ulang ke palet Buku Kas pada iterasi berikutnya.</li>
+  </ol>
+</section>
+
+<section id="7" style="display:flex;flex-direction:column;gap:40px">
+  <div style="display:flex;flex-direction:column;gap:8px;max-width:1200px"><h2 style="font-size:40px;font-weight:800;letter-spacing:-0.03em">7. Rekomendasi tambahan, didesain</h2><p style="font-size:16px;color:oklch(0.47 0.015 60);text-wrap:pretty">Fitur baru di luar repo saat ini. Copy pada dialog dan tautan undangan adalah usulan dan bisa diubah.</p></div>
+  <sc-for list="{{ reco }}" as="r" hint-placeholder-count="6">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;flex-direction:column;gap:4px;max-width:1200px"><h3 style="font-size:24px;font-weight:800">{{ r.label }}</h3><p style="font-size:15px;color:oklch(0.47 0.015 60);text-wrap:pretty">{{ r.note }}</p></div>
+      <div style="display:flex;gap:40px;align-items:flex-start">
+        <iframe data-auto="{{ r.autoD }}" src="{{ r.src }}" title="{{ r.label }} desktop" loading="lazy" style="width:1440px;height:900px;border:1px solid oklch(0.88 0.01 80);border-radius:12px;background:oklch(0.982 0.006 85);flex:none"></iframe>
+        <iframe data-auto="{{ r.autoM }}" src="{{ r.src }}" title="{{ r.label }} mobile" loading="lazy" style="width:375px;height:812px;border:1px solid oklch(0.88 0.01 80);border-radius:24px;background:oklch(0.982 0.006 85);flex:none"></iframe>
+      </div>
+    </div>
+  </sc-for>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this.t = setInterval(() => {
+      document.querySelectorAll('iframe[data-auto="1"]').forEach(f => {
+        try { const h = f.contentDocument && f.contentDocument.documentElement.scrollHeight; if (h && Math.abs(f.offsetHeight - h - 2) > 4) f.style.height = (h + 2) + 'px'; } catch (e) {}
+      });
+    }, 1200);
+  }
+  componentWillUnmount() { clearInterval(this.t); }
+  renderVals() {
+    const P = 'Rampung.dc.html?p=';
+    return {
+      pages: [
+        ['Login', '/login', 'login'], ['Verifikasi email', '/login/verifikasi', 'verifikasi'], ['Dashboard: Daftar Grup', '/dashboard', 'dashboard'],
+        ['Buat Grup', '/grup/baru', 'buat&s=isi'], ['Gabung Grup', '/grup/gabung', 'gabung'], ['Detail Grup', '/grup/[grupId]', 'grup'],
+        ['Catat Pengeluaran Baru', '/grup/[grupId]/pengeluaran/baru', 'tambah'], ['Edit Pengeluaran', '/grup/[grupId]/pengeluaran/[id]/edit', 'edit'],
+        ['Penyelesaian Utang (Settlement)', '/grup/[grupId]/settlement', 'settlement'],
+      ].map(([label, route, q]) => ({ label, route, src: P + q })),
+      reco: [
+        { label: 'Konfirmasi sebelum Tandai Lunas', note: 'Tombol Tandai Lunas kini membuka dialog berisi ringkasan transaksi (dari, ke, nominal). Pelunasan baru dicatat setelah "Ya, Tandai Lunas". Mencegah salah klik yang tidak bisa dibatalkan.', q: 'settlement&m=lunas', autoD: '0', autoM: '0' },
+        { label: 'Salin tautan undangan', note: 'Di kartu Kode Undangan, di bawah tombol Salin. Menyalin /grup/gabung?kode=..., yang sudah didukung prefill di halaman Gabung Grup. Di mobile kartu ini ada setelah riwayat pengeluaran.', q: 'grup', autoD: '0', autoM: '1' },
+        { label: 'Mode gelap: Dashboard', note: 'Tombol bulan/matahari di navbar. Palet gelap hangat (bukan hitam murni); hijau primer dinaikkan ke L 0.74 dengan teks gelap di atasnya agar tetap AA.', q: 'dashboard&t=dark', autoD: '0', autoM: '1' },
+        { label: 'Mode gelap: Detail Grup', note: 'Status saldo memakai varian terang dari hijau dan terakota di atas latar soft gelap.', q: 'grup&t=dark', autoD: '1', autoM: '1' },
+        { label: 'Mode gelap: Catat Pengeluaran', note: 'Segmented control, input, dan ringkasan sticky memakai token permukaan gelap.', q: 'tambah&t=dark', autoD: '1', autoM: '1' },
+        { label: 'Mode gelap: Settlement', note: 'Chip dari/ke dan tombol Tandai Lunas memakai token gelap yang sama.', q: 'settlement&t=dark', autoD: '1', autoM: '1' },
+      ].map(r => ({ ...r, src: P + r.q })),
+      states: [
+        ['Dashboard: loading (skeleton)', 'dashboard&s=loading', '0'], ['Dashboard: kosong', 'dashboard&s=kosong', '0'], ['Dashboard: error', 'dashboard&s=error', '0'],
+        ['Login: error', 'login&s=error', '0'], ['Login: loading', 'login&s=loading', '0'], ['Buat Grup: disabled', 'buat', '0'],
+        ['Buat Grup: loading', 'buat&s=loading', '0'], ['Gabung Grup: error', 'gabung&s=error', '0'], ['Detail Grup: kosong', 'grup&s=kosong', '1'],
+        ['Detail Grup: form anggota tanpa akun', 'grup&add=1', '1'], ['Modal: Hapus Grup', 'grup&m=hapusGrup', '0'], ['Modal: Hapus Pengeluaran', 'grup&m=hapusPengeluaran', '0'],
+        ['Form: validasi persentase gagal', 'tambah&s=invalid', '1'], ['Form: banner error', 'tambah&s=error', '1'], ['Form: menyimpan', 'tambah&s=loading', '1'],
+        ['Modal: Konflik Versi Data', 'edit&m=konflik', '0'], ['Settlement: semua lunas', 'settlement&s=lunas', '1'],
+      ].map(([label, q, auto]) => ({ label, src: P + q, auto })),
+      handoff: [
+        { k: 'Token warna, radius, shadow', f: 'src/app/globals.css', c: 'Ganti nilai :root dengan token di bawah; tambah --positive, --negative, --accent, --warning beserta varian -soft ke @theme inline. Hapus pemakaian langsung emerald/rose/amber.' },
+        { k: 'Font', f: 'src/app/layout.tsx', c: 'Ganti Inter dengan Plus_Jakarta_Sans (variable --font-sans). Body 15px/1.5. Tetap Geist_Mono.' },
+        { k: 'Navbar', f: 'src/app/(dashboard)/layout.tsx', c: 'Tinggi 64px, max-w 1120px, penanda kotak hijau + wordmark, email terpotong ellipsis (tidak hidden) di mobile, tombol Keluar 40px dengan ikon LogOut.' },
+        { k: 'Login dan Verifikasi', f: 'src/app/(auth)/login/page.tsx, login/verifikasi/page.tsx', c: 'Form dibungkus kartu, input 46px, banner error dengan ikon. Tambah state pending lewat useFormStatus untuk "Mengirim...". Ikon Mail di verifikasi.' },
+        { k: 'Kartu grup dan state daftar', f: 'src/app/(dashboard)/dashboard/page.tsx', c: 'Grid auto-fill minmax(300px,1fr). Loading diganti skeleton 3 kartu. Error dengan ikon. Empty state tetap, tombol 44px.' },
+        { k: 'Form Buat/Gabung Grup', f: 'src/app/(dashboard)/grup/baru/page.tsx, grup/gabung/page.tsx', c: 'Hapus emoji, ganti kotak Info. Tombol disabled memakai warna solid (bukan opacity 50%) agar kontras teks tetap AA.' },
+        { k: 'Header Detail Grup', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Nama grup jadi display 34px. Settlement dan Tambah Pengeluaran naik ke header sebagai aksi utama. Kode undangan dan Hapus Grup pindah ke kolom samping.' },
+        { k: 'Layout dua kolom', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Wrapper max-w 1120px; flex-wrap: konten utama flex 999 1 560px, aside flex 1 1 300px (otomatis bertumpuk di mobile).' },
+        { k: 'Kartu saldo', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Pakai token positive/negative. Nominal 22px tabular-nums, format "−Rp 70.000" (tanda di depan Rp). Teks status minimal 12px.' },
+        { k: 'Item riwayat pengeluaran', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Tombol ikon 40px dengan aria-label. Badge versi mono muted. Chip pembagian grid auto-fill 150px.' },
+        { k: 'Daftar anggota', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Label "Berakun"/"Tanpa Akun" selalu tampil (hapus hidden sm:inline). Tombol tambah anggota bergaya dashed soft.' },
+        { k: 'Modal konfirmasi dan konflik', f: 'grup/[grupId]/page.tsx, src/components/pengeluaran/FormPengeluaran.tsx', c: 'Ekstrak ke komponen Dialog dengan role="dialog", aria-modal, aria-labelledby, fokus awal ke Batal, tutup dengan Escape. Tile ikon di kiri judul.' },
+        { k: 'Form pengeluaran', f: 'src/components/pengeluaran/FormPengeluaran.tsx', c: 'Dua kolom: field + split di kiri, ringkasan sticky (total, pembayar, jenis, validasi, tombol simpan) di kanan. Split jadi segmented control role="radiogroup". Hapus max-h-60 pada daftar anggota. Checkbox 20px dengan accent-color.' },
+        { k: 'Header form', f: 'pengeluaran/baru/page.tsx, [pengeluaranId]/edit/page.tsx', c: 'Lebar max-w 1000px, ikon CirclePlus/PenLine. Konten tetap.' },
+        { k: 'Rekomendasi settlement', f: 'src/app/(dashboard)/grup/[grupId]/settlement/page.tsx', c: 'Baris flex-wrap agar nominal dan tombol turun di mobile. Chip dari/ke memakai negative-soft/positive-soft. Pill Real-time Sync dengan titik.' },
+        { k: 'Rekap saldo dan ekspor', f: 'src/components/settlement/RekapSaldo.tsx', c: 'Tampilkan label jenis split ("Sama Rata"), bukan enum. Rincian per anggota jadi blok header + baris. Skeleton pakai token --muted, bukan slate-200.' },
+        { k: 'Error boundary', f: 'src/components/settlement/SettlementErrorBoundary.tsx', c: 'Pakai gaya banner error yang sama (destructive-soft + ikon TriangleAlert).' },
+        { k: 'Baru: konfirmasi Tandai Lunas', f: 'src/app/(dashboard)/grup/[grupId]/settlement/page.tsx', c: 'Simpan transaksi terpilih di state (pendingTx). Tombol membuka Dialog berisi ringkasan dari, ke, dan nominal; handleLunas dipanggil dari tombol "Ya, Tandai Lunas". Tampilkan loading di tombol selama tandaiLunas.isPending.' },
+        { k: 'Baru: salin tautan undangan', f: 'src/app/(dashboard)/grup/[grupId]/page.tsx', c: 'Tambah handleCopyLink: navigator.clipboard.writeText(`${window.location.origin}/grup/gabung?kode=${grup.kode_undangan}`) dengan state linkCopied 2 detik, seperti handleCopyKode.' },
+        { k: 'Baru: mode gelap', f: 'src/app/globals.css, src/app/(dashboard)/layout.tsx', c: 'Isi blok .dark dengan token di bawah. Tombol tema (Moon/Sun) di navbar men-toggle class dark pada <html>, simpan pilihan di localStorage, dan baca prefers-color-scheme sebagai default.' },
+      ],
+      css: `:root {
+  --background: oklch(0.982 0.006 85);
+  --foreground: oklch(0.23 0.015 60);
+  --card: oklch(0.998 0.002 85);
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.44 0.085 162);
+  --primary-hover: oklch(0.38 0.08 162);
+  --primary-foreground: oklch(0.99 0.005 162);
+  --primary-soft: oklch(0.945 0.03 162);
+  --secondary: oklch(0.955 0.008 85);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.955 0.008 85);
+  --muted-foreground: oklch(0.47 0.015 60);
+  --accent: oklch(0.95 0.045 85);
+  --accent-foreground: oklch(0.40 0.09 65);
+  --accent-strong: oklch(0.62 0.12 75);
+  --positive: oklch(0.42 0.11 150);
+  --positive-soft: oklch(0.95 0.035 150);
+  --negative: oklch(0.48 0.13 45);
+  --negative-soft: oklch(0.965 0.02 45);
+  --warning: oklch(0.58 0.12 70);
+  --destructive: oklch(0.50 0.18 27);
+  --destructive-foreground: oklch(0.99 0.005 85);
+  --destructive-soft: oklch(0.955 0.03 27);
+  --border: oklch(0.905 0.01 80);
+  --input: oklch(0.83 0.012 80);
+  --ring: oklch(0.44 0.085 162);
+  --radius: 0.625rem; /* 10px: tombol, input */
+  --radius-xs: 6px; --radius-sm: 8px; --radius-md: 10px;
+  --radius-lg: 12px; --radius-xl: 16px;
+  --shadow-xs: 0 1px 2px oklch(0.23 0.015 60 / 0.04);
+  --shadow-md: 0 10px 24px -14px oklch(0.23 0.015 60 / 0.25);
+  --shadow-lg: 0 24px 48px -16px oklch(0.23 0.015 60 / 0.35);
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px;
+  --container: 1120px;
+  --hit-target: 44px;
+}
+
+.dark {
+  --background: oklch(0.19 0.008 70);
+  --foreground: oklch(0.95 0.008 85);
+  --card: oklch(0.23 0.01 70);
+  --primary: oklch(0.74 0.11 162);
+  --primary-hover: oklch(0.82 0.10 162);
+  --primary-foreground: oklch(0.18 0.02 162);
+  --primary-soft: oklch(0.30 0.045 162);
+  --muted: oklch(0.28 0.01 70);
+  --muted-foreground: oklch(0.76 0.012 80);
+  --accent: oklch(0.31 0.045 80);
+  --accent-foreground: oklch(0.85 0.10 80);
+  --positive: oklch(0.82 0.12 150);
+  --positive-soft: oklch(0.29 0.045 150);
+  --negative: oklch(0.80 0.11 45);
+  --negative-soft: oklch(0.29 0.035 45);
+  --destructive: oklch(0.55 0.18 27);
+  --destructive-soft: oklch(0.29 0.05 27);
+  --border: oklch(0.33 0.012 70);
+  --input: oklch(0.42 0.012 70);
+  --ring: oklch(0.74 0.11 162);
+}`,
+      order: [
+        'Token di globals.css dan font di layout.tsx; seluruh halaman langsung berubah warna dan huruf.',
+        'Komponen dasar di src/components/ui: Button (primary, secondary, accent, danger, icon; state loading/disabled), Input, Card, Alert, Badge, Dialog.',
+        'Navbar di (dashboard)/layout.tsx dan halaman auth (login, verifikasi).',
+        'Dashboard beserta skeleton, empty, error; lalu Buat Grup dan Gabung Grup.',
+        'Detail Grup: header, layout dua kolom, saldo, riwayat, anggota, dua modal.',
+        'FormPengeluaran: segmented split, ringkasan sticky, dialog konflik.',
+        'Settlement dan RekapSaldo, lalu uji kontras (axe/Lighthouse) dan uji di 375px dan 1440px.',
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

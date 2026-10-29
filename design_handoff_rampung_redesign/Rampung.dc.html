@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Geist+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:oklch(0.982 0.006 85);color:oklch(0.23 0.015 60);font:400 15px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+a{color:oklch(0.44 0.085 162);text-decoration:underline;text-underline-offset:3px}
+a:hover{color:oklch(0.38 0.08 162)}
+h1,h2,h3,p{margin:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{opacity:.5}}
+[data-theme="dark"]{color-scheme:dark;--c0:oklch(0.19 0.008 70);--c1:oklch(0.95 0.008 85);--c2:oklch(0.19 0.008 70 / 0.92);--c3:oklch(0.33 0.012 70);--c4:oklch(0.74 0.11 162);--c5:oklch(0.76 0.012 80);--c6:oklch(0.42 0.012 70);--c7:oklch(0.23 0.01 70);--c8:oklch(0.28 0.01 70);--c9:oklch(0.45 0.09 27);--c10:oklch(0.29 0.05 27);--c11:oklch(0.80 0.12 27);--c12:oklch(0.74 0.11 162 / 0.2);--c13:oklch(0.18 0.02 162);--c14:oklch(0.82 0.10 162);--c15:oklch(0.30 0.045 162);--c16:oklch(0.30 0.01 70);--c17:oklch(0.74 0.11 162 / 0.5);--c18:oklch(0.55 0.18 27);--c19:oklch(0.80 0.01 80);--c20:oklch(0.32 0.02 162);--c21:oklch(0.70 0.03 162);--c22:oklch(0.45 0.07 80);--c23:oklch(0.31 0.045 80);--c24:oklch(0.85 0.10 80);--c25:oklch(0.36 0.05 80);--c26:oklch(0.29 0.045 150);--c27:oklch(0.82 0.12 150);--c28:oklch(0.75 0.15 150);--c29:oklch(0.38 0.012 70);--c30:oklch(0.27 0.01 70);--c31:oklch(0.42 0.06 150);--c32:oklch(0.30 0.045 162 / 0.5);--c33:oklch(0.74 0.11 162 / 0.25);--c34:oklch(0.35 0.06 27);--c35:oklch(0.82 0.12 150);--c36:oklch(0.78 0.13 80);--c37:oklch(0.84 0.11 150);--c38:oklch(0.75 0.13 150);--c39:oklch(0.25 0.01 70);--c40:oklch(0.29 0.035 45);--c41:oklch(0.80 0.11 45);--c42:oklch(0.26 0.01 70);--c43:oklch(0.82 0.12 150);--c44:oklch(0 0 0 / 0.6);--c45:oklch(0.32 0.01 70);--c46:oklch(0.76 0.012 80);--c47:oklch(0.78 0.12 75);--c48:oklch(0.27 0.035 150);--c49:oklch(0.42 0.06 150);--c50:oklch(0.80 0.11 45);--c51:oklch(0.27 0.03 45);--c52:oklch(0.42 0.05 45);--c53:oklch(0.74 0.11 162 / 0.35);--c54:oklch(0.74 0.11 162 / 0.3);--c55:oklch(0.30 0.045 162 / 0.45);--c56:oklch(0.99 0.005 85)}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="min-height:100vh;display:flex;flex-direction:column;background:var(--c0, oklch(0.982 0.006 85));color:var(--c1, oklch(0.23 0.015 60));transition:background .2s">
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<header style="position:sticky;top:0;z-index:20;background:var(--c2, oklch(0.982 0.006 85 / 0.92));backdrop-filter:blur(8px);border-bottom:1px solid var(--c3, oklch(0.905 0.01 80))">
+  <div style="max-width:1120px;margin:0 auto;height:64px;padding:0 clamp(16px,4vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <button onClick="{{ goDashboard }}" style="background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-0.02em;color:var(--c1, oklch(0.23 0.015 60));min-height:44px" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px;border-radius:6px">
+      <span style="width:12px;height:12px;border-radius:3px;background:var(--c4, oklch(0.44 0.085 162))"></span>Rampung
+    </button>
+    <div style="display:flex;align-items:center;gap:8px;min-width:0">
+      <span style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60));overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;margin-right:4px">fajar@contoh.com</span>
+      <button onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" title="{{ themeLabel }}" style="flex:none;width:40px;height:40px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="{{ themeIcon }}" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import></button>
+      <button onClick="{{ goLogin }}" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:13px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">
+        <dc-import name="Ikon" n="log-out" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Keluar
+      </button>
+    </div>
+  </div>
+</header>
+</sc-if>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Login" style="flex:1;display:grid;place-items:center;padding:48px 16px">
+  <div style="width:100%;max-width:400px">
+    <div style="text-align:center;margin-bottom:32px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <span style="width:16px;height:16px;border-radius:4px;background:var(--c4, oklch(0.44 0.085 162))"></span>
+      <h1 style="font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-0.03em">Rampung</h1>
+      <p style="font-size:15px;color:var(--c5, oklch(0.47 0.015 60))">Masuk atau daftar — cukup dengan email</p>
+    </div>
+    <div style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:28px;box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04),0 8px 24px -12px oklch(0.23 0.015 60 / 0.12);display:flex;flex-direction:column;gap:20px">
+      <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27));font-size:14px">
+          <dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import>
+          <span>Tautan masuk sudah kedaluwarsa. Silakan minta tautan baru.</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="email" style="font-weight:600;font-size:14px">Alamat Email</label>
+        <input id="email" type="email" autocomplete="email" placeholder="nama@contoh.com" style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+      </div>
+      <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+        <button disabled="{{ true }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;opacity:.75;cursor:progress"><span style="width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite"></span>Mengirim...</button>
+      </sc-if>
+      <sc-if value="{{ notLoading }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goVerifikasi }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">Kirim Link Masuk</button>
+      </sc-if>
+    </div>
+    <p style="margin-top:24px;text-align:center;font-size:13px;line-height:1.6;color:var(--c5, oklch(0.47 0.015 60));text-wrap:pretty">Kami akan mengirim tautan masuk ke email Anda. Buka tautan itu untuk masuk, dan akun akan dibuat otomatis jika belum terdaftar.</p>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isVerifikasi }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Verifikasi" style="flex:1;display:grid;place-items:center;padding:48px 16px">
+  <div style="width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px">
+    <div style="width:56px;height:56px;border-radius:16px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c4, oklch(0.44 0.085 162));display:grid;place-items:center">
+      <dc-import name="Ikon" n="mail" hint-size="24px,24px" style="display:inline-block;width:24px;height:24px"></dc-import>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h1 style="font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-0.02em">Cek email Anda</h1>
+      <p style="font-size:15px;color:var(--c5, oklch(0.47 0.015 60))">Kami telah mengirim tautan masuk ke <span style="font-weight:700;color:var(--c1, oklch(0.23 0.015 60))">fajar@contoh.com</span></p>
+    </div>
+    <div style="width:100%;text-align:left;background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">
+      <p style="font-weight:700;color:var(--c1, oklch(0.23 0.015 60))">Buka tautan di email Anda untuk masuk.</p>
+      <p style="text-wrap:pretty">Setelah Anda mengklik tautan, Anda akan diarahkan ke aplikasi secara otomatis. Jika email belum muncul, cek folder spam atau promo.</p>
+    </div>
+    <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Tidak menerima email? <a href="#" onClick="{{ goLogin }}">Kembali ke halaman login</a></p>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<main style="flex:1;width:100%;max-width:1120px;margin:0 auto;padding:clamp(24px,4vw,40px) clamp(16px,4vw,32px) 72px">
+
+<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Dashboard" style="display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px">
+    <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+      <h1 style="font-size:clamp(26px,3vw,32px);line-height:1.15;font-weight:800;letter-spacing:-0.025em">Daftar Grup</h1>
+      <p style="font-size:15px;color:var(--c5, oklch(0.47 0.015 60))">Kelola pengeluaran bersama dan pantau penyelesaian utang</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px">
+      <button onClick="{{ goGabung }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:14px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="user-plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Gabung Grup</button>
+      <button onClick="{{ goBuat }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Buat Grup</button>
+    </div>
+  </div>
+
+  <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+    <div aria-busy="true" aria-label="Memuat daftar grup" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px">
+      <sc-for list="{{ three }}" as="x" hint-placeholder-count="3">
+        <div style="height:148px;border-radius:16px;border:1px solid var(--c3, oklch(0.905 0.01 80));background:var(--c7, oklch(0.998 0.002 85));padding:20px;display:flex;flex-direction:column;gap:12px;animation:pulse 1.6s ease-in-out infinite">
+          <div style="height:18px;width:60%;border-radius:6px;background:var(--c16, oklch(0.93 0.008 85))"></div>
+          <div style="height:12px;width:35%;border-radius:6px;background:var(--c16, oklch(0.93 0.008 85))"></div>
+          <div style="margin-top:auto;height:12px;width:80%;border-radius:6px;background:var(--c16, oklch(0.93 0.008 85))"></div>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+    <div role="alert" style="display:flex;gap:12px;align-items:flex-start;padding:18px 20px;border-radius:16px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27))">
+      <dc-import name="Ikon" n="triangle-alert" hint-size="18px,18px" style="display:inline-block;width:18px;height:18px;flex:none;margin-top:2px"></dc-import>
+      <p style="font-size:14px;font-weight:600">Gagal memuat daftar grup: Failed to fetch</p>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="border:1.5px dashed var(--c6, oklch(0.83 0.012 80));border-radius:16px;background:var(--c7, oklch(0.998 0.002 85));padding:clamp(32px,6vw,56px) 24px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c4, oklch(0.44 0.085 162));display:grid;place-items:center"><dc-import name="Ikon" n="users" hint-size="24px,24px" style="display:inline-block;width:24px;height:24px"></dc-import></div>
+      <h2 style="font-size:19px;font-weight:800">Belum Memiliki Grup</h2>
+      <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60));max-width:400px;text-wrap:pretty">Buat grup baru untuk mulai membagi pengeluaran atau bergabung dengan grup teman Anda via kode undangan.</p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:12px">
+        <button onClick="{{ goBuat }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))"><dc-import name="Ikon" n="plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Buat Grup Sekarang</button>
+        <button onClick="{{ goGabung }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:14px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))"><dc-import name="Ikon" n="user-plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Masukkan Kode</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasGrup }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px">
+      <sc-for list="{{ grupList }}" as="g" hint-placeholder-count="2">
+        <button onClick="{{ g.open }}" style="text-align:left;display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:16px;border:1px solid var(--c3, oklch(0.905 0.01 80));background:var(--c7, oklch(0.998 0.002 85));box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s" style-hover="border-color:var(--c17, oklch(0.44 0.085 162 / 0.5));box-shadow:0 10px 24px -14px oklch(0.23 0.015 60 / 0.25);transform:translateY(-1px)" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;width:100%">
+            <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+              <h2 style="font-size:17px;font-weight:800;letter-spacing:-0.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ g.nama }}</h2>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--c5, oklch(0.47 0.015 60))"><dc-import name="Ikon" n="users" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>{{ g.n }} anggota</span>
+            </div>
+            <dc-import name="Ikon" n="chevron-right" hint-size="18px,18px" style="display:inline-block;width:18px;height:18px;flex:none;color:var(--c5, oklch(0.47 0.015 60))"></dc-import>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding-top:14px;border-top:1px solid var(--c16, oklch(0.93 0.008 85));font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">
+            <span>Kode: <strong style="font-family:'Geist Mono',monospace;font-weight:600;color:var(--c1, oklch(0.23 0.015 60))">{{ g.kode }}</strong></span>
+            <span>{{ g.tgl }}</span>
+          </div>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ isBuatOrGabung }}" hint-placeholder-val="{{ false }}">
+<div style="max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px">
+  <button onClick="{{ goDashboard }}" style="align-self:flex-start;background:none;border:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:14px;color:var(--c5, oklch(0.47 0.015 60))" style-hover="color:var(--c1, oklch(0.23 0.015 60))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px;border-radius:6px"><dc-import name="Ikon" n="arrow-left" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Kembali ke Dashboard</button>
+  <div style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(20px,4vw,32px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:24px">
+
+  <sc-if value="{{ isBuat }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Buat Grup" style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;flex:none;border-radius:12px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c4, oklch(0.44 0.085 162));display:grid;place-items:center"><dc-import name="Ikon" n="users" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px"></dc-import></div>
+        <div style="display:flex;flex-direction:column;gap:2px"><h1 style="font-size:22px;font-weight:800;letter-spacing:-0.02em">Buat Grup Baru</h1><p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Mulai patungan dan kelola utang bersama teman</p></div>
+      </div>
+      <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27));font-size:14px"><dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Gagal membuat grup. Periksa koneksi Anda lalu coba lagi.</span></div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="nama" style="font-weight:600;font-size:14px">Nama Grup <span style="color:var(--c18, oklch(0.50 0.18 27))">*</span></label>
+        <input id="nama" value="{{ namaGrup }}" onChange="{{ setNamaGrup }}" placeholder="Contoh: Liburan Bali 2026, Kos Melati" style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="namaPemilik" style="font-weight:600;font-size:14px">Nama Anda di Grup <span style="font-weight:500;font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">(Opsional)</span></label>
+        <input id="namaPemilik" placeholder="Nama yang ingin tampil di grup (misal: Budi)" style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--c8, oklch(0.955 0.008 85));font-size:13px;line-height:1.55;color:var(--c19, oklch(0.40 0.015 60))">
+        <dc-import name="Ikon" n="info" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:1px"></dc-import>
+        <span style="text-wrap:pretty">Sebagai pembuat grup, Anda akan otomatis terdaftar sebagai anggota pertama. Jika ingin tampil berbeda, isi "Nama Anda di Grup".</span>
+      </div>
+      <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+        <button disabled="{{ true }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;opacity:.75;cursor:progress"><span style="width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite"></span>Membuat Grup...</button>
+      </sc-if>
+      <sc-if value="{{ buatReady }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openGrup }}" style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">Buat Grup</button>
+      </sc-if>
+      <sc-if value="{{ buatDisabled }}" hint-placeholder-val="{{ true }}">
+        <button disabled="{{ true }}" aria-disabled="true" style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;border:none;background:var(--c20, oklch(0.90 0.015 162));color:var(--c21, oklch(0.42 0.03 162));font-weight:700;font-size:15px;cursor:not-allowed">Buat Grup</button>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isGabung }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Gabung Grup" style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;flex:none;border-radius:12px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c4, oklch(0.44 0.085 162));display:grid;place-items:center"><dc-import name="Ikon" n="user-plus" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px"></dc-import></div>
+        <div style="display:flex;flex-direction:column;gap:2px"><h1 style="font-size:22px;font-weight:800;letter-spacing:-0.02em">Gabung Grup</h1><p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Masukkan kode undangan dari admin grup untuk bergabung</p></div>
+      </div>
+      <sc-if value="{{ isError }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27));font-size:14px"><dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Kode undangan tidak ditemukan.</span></div>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="kode" style="font-weight:600;font-size:14px">Kode Undangan <span style="color:var(--c18, oklch(0.50 0.18 27))">*</span></label>
+        <div style="position:relative">
+          <dc-import name="Ikon" n="key-round" hint-size="16px,16px" style="position:absolute;left:14px;top:15px;width:16px;height:16px;color:var(--c5, oklch(0.47 0.015 60))"></dc-import>
+          <input id="kode" value="{{ kode }}" onChange="{{ setKode }}" placeholder="Contoh: a1b2c3d4" style="width:100%;height:46px;padding:0 14px 0 42px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-family:'Geist Mono',monospace;font-size:15px;letter-spacing:0.04em" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label for="namaTampil" style="font-weight:600;font-size:14px">Nama Tampilan di Grup <span style="font-weight:500;font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">(Opsional)</span></label>
+        <input id="namaTampil" placeholder="Kosongkan untuk menggunakan email akun Anda" style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+      </div>
+      <sc-if value="{{ gabungReady }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ openGrup }}" style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">Gabung ke Grup</button>
+      </sc-if>
+      <sc-if value="{{ gabungDisabled }}" hint-placeholder-val="{{ true }}">
+        <button disabled="{{ true }}" style="display:inline-flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;border:none;background:var(--c20, oklch(0.90 0.015 162));color:var(--c21, oklch(0.42 0.03 162));font-weight:700;font-size:15px;cursor:not-allowed">Gabung ke Grup</button>
+      </sc-if>
+    </div>
+  </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isGrup }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Detail Grup" style="display:flex;flex-direction:column;gap:20px">
+  <button onClick="{{ goDashboard }}" style="align-self:flex-start;background:none;border:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:14px;color:var(--c5, oklch(0.47 0.015 60))" style-hover="color:var(--c1, oklch(0.23 0.015 60))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px;border-radius:6px"><dc-import name="Ikon" n="arrow-left" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Kembali ke Dashboard</button>
+
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:8px">
+    <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+        <h1 style="font-size:clamp(26px,3.2vw,34px);line-height:1.1;font-weight:800;letter-spacing:-0.03em">Liburan Bali 2026</h1>
+        <span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c14, oklch(0.38 0.08 162));font-size:12px;font-weight:700"><dc-import name="Ikon" n="shield-check" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Admin</span>
+      </div>
+      <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Dibuat pada 12 Oktober 2026</p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px">
+      <button onClick="{{ goSettlement }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:1px solid var(--c22, oklch(0.85 0.07 80));background:var(--c23, oklch(0.95 0.045 85));color:var(--c24, oklch(0.40 0.09 65));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c25, oklch(0.92 0.06 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="sparkles" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Penyelesaian Utang (Settlement)</button>
+      <button onClick="{{ goTambah }}" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;white-space:nowrap;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="circle-plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Tambah Pengeluaran</button>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+    <div style="flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:24px">
+
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px"><dc-import name="Ikon" n="wallet" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px;color:var(--c4, oklch(0.44 0.085 162))"></dc-import><h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">Saldo Bersih Anggota</h2></div>
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-size:12px;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:var(--c28, oklch(0.55 0.14 150));animation:pulse 1.6s ease-in-out infinite"></span>Real-time Live</span>
+        </div>
+        <sc-if value="{{ hasPengeluaran }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:12px">
+            <sc-for list="{{ saldo }}" as="s" hint-placeholder-count="4">
+              <div style="padding:16px;border-radius:12px;border:1px solid {{ s.bd }};background:{{ s.bg }};display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                  <span style="font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.nama }}</span>
+                  <span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:{{ s.c }}"><dc-import name="Ikon" n="{{ s.icon }}" hint-size="13px,13px" style="display:inline-block;width:13px;height:13px"></dc-import>{{ s.label }}</span>
+                </div>
+                <div>
+                  <p style="font-size:22px;line-height:1.2;font-weight:800;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;color:{{ s.c }}">{{ s.txt }}</p>
+                  <p style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60));margin-top:2px">{{ s.cap }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noPengeluaran }}" hint-placeholder-val="{{ false }}">
+          <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60));text-align:center;padding:12px 0">Belum ada saldo tercatat.</p>
+        </sc-if>
+      </section>
+
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;align-items:center;gap:10px"><dc-import name="Ikon" n="receipt" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px;color:var(--c4, oklch(0.44 0.085 162))"></dc-import><h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">{{ ttlRiwayat }}</h2></div>
+        <sc-if value="{{ noPengeluaran }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1.5px dashed var(--c6, oklch(0.83 0.012 80));border-radius:12px;padding:32px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px">
+            <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Belum ada pengeluaran dicatat di grup ini.</p>
+            <button onClick="{{ goTambah }}" style="background:none;border:none;padding:0 4px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;color:var(--c4, oklch(0.44 0.085 162))" style-hover="text-decoration:underline">Catat pengeluaran pertama<dc-import name="Ikon" n="arrow-right" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import></button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasPengeluaran }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ pengeluaran }}" as="p" hint-placeholder-count="3">
+              <article style="border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:14px;transition:border-color .15s" style-hover="border-color:var(--c6, oklch(0.83 0.012 80))">
+                <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:12px">
+                  <div style="flex:1 1 240px;min-width:0;display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+                      <h3 style="font-size:16px;font-weight:700">{{ p.desk }}</h3>
+                      <span style="padding:2px 8px;border-radius:6px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c14, oklch(0.38 0.08 162));font-size:12px;font-weight:700">{{ p.jenisLabel }}</span>
+                      <span title="Versi data (Optimistic Locking)" aria-label="Versi data {{ p.v }}" style="padding:2px 6px;border-radius:6px;background:var(--c8, oklch(0.955 0.008 85));color:var(--c5, oklch(0.47 0.015 60));font-family:'Geist Mono',monospace;font-size:12px">v{{ p.v }}</span>
+                    </div>
+                    <p style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">Dibayar oleh <strong style="font-weight:700;color:var(--c1, oklch(0.23 0.015 60))">{{ p.payer }}</strong> · {{ p.tgl }}</p>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:4px">
+                    <span style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;margin-right:8px">{{ p.totalTxt }}</span>
+                    <button onClick="{{ goEdit }}" aria-label="Edit Pengeluaran" title="Edit Pengeluaran" style="width:40px;height:40px;display:grid;place-items:center;border:none;border-radius:10px;background:transparent;color:var(--c5, oklch(0.47 0.015 60));cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85));color:var(--c4, oklch(0.44 0.085 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:1px"><dc-import name="Ikon" n="pen-line" hint-size="17px,17px" style="display:inline-block;width:17px;height:17px"></dc-import></button>
+                    <button onClick="{{ askHapusPengeluaran }}" aria-label="Hapus Pengeluaran" title="Hapus Pengeluaran" style="width:40px;height:40px;display:grid;place-items:center;border:none;border-radius:10px;background:transparent;color:var(--c5, oklch(0.47 0.015 60));cursor:pointer" style-hover="background:var(--c10, oklch(0.955 0.03 27));color:var(--c18, oklch(0.50 0.18 27))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:1px"><dc-import name="Ikon" n="trash-2" hint-size="17px,17px" style="display:inline-block;width:17px;height:17px"></dc-import></button>
+                  </div>
+                </div>
+                <div style="padding-top:12px;border-top:1px dashed var(--c29, oklch(0.88 0.01 80));display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr));gap:8px">
+                  <sc-for list="{{ p.bagi }}" as="b" hint-placeholder-count="3">
+                    <div style="display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:8px;background:var(--c30, oklch(0.965 0.007 85));font-size:13px">
+                      <span style="color:var(--c5, oklch(0.47 0.015 60));overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.nama }}</span>
+                      <span style="font-weight:700;font-variant-numeric:tabular-nums;flex:none">{{ b.txt }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </sc-if>
+      </section>
+    </div>
+
+    <aside style="flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:24px">
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:20px;box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:10px">
+        <p style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--c5, oklch(0.47 0.015 60))">Kode Undangan</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <span style="font-family:'Geist Mono',monospace;font-size:24px;font-weight:700;letter-spacing:0.06em">a1b2c3d4</span>
+          <sc-if value="{{ notCopied }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ copy }}" style="display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:13px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="copy" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Salin</button>
+          </sc-if>
+          <sc-if value="{{ copied }}" hint-placeholder-val="{{ false }}">
+            <span role="status" style="display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--c31, oklch(0.85 0.06 150));background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-weight:700;font-size:13px"><dc-import name="Ikon" n="check" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Tersalin</span>
+          </sc-if>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--c16, oklch(0.93 0.008 85))">
+          <p style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">Atau bagikan tautan, kode akan terisi otomatis:</p>
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:9px 10px;border-radius:8px;background:var(--c8, oklch(0.955 0.008 85));font-family:'Geist Mono',monospace;font-size:12px;color:var(--c19, oklch(0.40 0.015 60))">rampung.app/grup/gabung?kode=a1b2c3d4</span>
+            <sc-if value="{{ notLinkCopied }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ copyLink }}" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:13px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="link" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Salin Tautan</button>
+            </sc-if>
+            <sc-if value="{{ linkCopied }}" hint-placeholder-val="{{ false }}">
+              <span role="status" style="flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border-radius:10px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-weight:700;font-size:13px"><dc-import name="Ikon" n="check" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Tautan tersalin</span>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:20px;box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;align-items:center;gap:10px"><dc-import name="Ikon" n="users" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px;color:var(--c4, oklch(0.44 0.085 162))"></dc-import><h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">{{ ttlAnggota }}</h2></div>
+        <sc-if value="{{ notAdding }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openAdd }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 14px;border-radius:10px;border:1px dashed var(--c17, oklch(0.44 0.085 162 / 0.5));background:var(--c32, oklch(0.945 0.03 162 / 0.5));color:var(--c14, oklch(0.38 0.08 162));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c15, oklch(0.945 0.03 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="plus" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Tambah Anggota Tanpa Akun</button>
+        </sc-if>
+        <sc-if value="{{ adding }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px;border-radius:12px;border:1px solid var(--c33, oklch(0.44 0.085 162 / 0.25));background:var(--c32, oklch(0.945 0.03 162 / 0.5));display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:4px"><h3 style="font-size:14px;font-weight:700">Tambah Anggota (Tanpa Akun)</h3><p style="font-size:13px;color:var(--c19, oklch(0.40 0.015 60));text-wrap:pretty">Anggota ini tidak perlu login. Berguna untuk mencatat orang yang belum memiliki akun.</p></div>
+            <input aria-label="Nama Anggota" value="{{ namaTanpa }}" onChange="{{ setNamaTanpa }}" placeholder="Nama Anggota (misal: Budi)" style="width:100%;height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:14px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+            <div style="display:flex;gap:8px">
+              <button onClick="{{ simpanAnggota }}" disabled="{{ namaTanpaEmpty }}" style="flex:1;min-height:40px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))">Simpan</button>
+              <button onClick="{{ closeAdd }}" style="min-height:40px;padding:0 16px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:14px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))">Batal</button>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ anggota }}" as="a" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--c16, oklch(0.93 0.008 85))">
+              <div style="display:flex;align-items:center;gap:12px;min-width:0">
+                <div style="width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:{{ a.avBg }};color:{{ a.avC }}">{{ a.init }}</div>
+                <div style="min-width:0"><p style="font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.nama }}</p><p style="font-size:12px;color:var(--c5, oklch(0.47 0.015 60))">Bergabung {{ a.join }}</p></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex:none">
+                <sc-if value="{{ a.owner }}" hint-placeholder-val="{{ false }}"><span style="padding:2px 8px;border-radius:6px;background:var(--c23, oklch(0.95 0.045 85));color:var(--c24, oklch(0.40 0.09 65));font-size:12px;font-weight:700">Pemilik</span></sc-if>
+                <span title="{{ a.statusTitle }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--c5, oklch(0.47 0.015 60))"><dc-import name="Ikon" n="{{ a.statusIcon }}" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px;color:{{ a.statusC }}"></dc-import>{{ a.status }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <button onClick="{{ askHapusGrup }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c7, oklch(0.998 0.002 85));color:var(--c11, oklch(0.47 0.18 27));font-weight:700;font-size:14px;cursor:pointer" style-hover="background:var(--c10, oklch(0.955 0.03 27))" style-focus="outline:2px solid var(--c18, oklch(0.50 0.18 27));outline-offset:2px"><dc-import name="Ikon" n="trash-2" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Hapus Grup</button>
+    </aside>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isForm }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Form Pengeluaran" style="display:flex;flex-direction:column;gap:20px;max-width:1000px;margin:0 auto;width:100%">
+  <button onClick="{{ goGrup }}" style="align-self:flex-start;background:none;border:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:14px;color:var(--c5, oklch(0.47 0.015 60))" style-hover="color:var(--c1, oklch(0.23 0.015 60))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px;border-radius:6px"><dc-import name="Ikon" n="arrow-left" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Kembali ke Grup Liburan Bali 2026</button>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div style="width:44px;height:44px;flex:none;border-radius:12px;background:var(--c15, oklch(0.945 0.03 162));color:var(--c4, oklch(0.44 0.085 162));display:grid;place-items:center"><dc-import name="Ikon" n="{{ formIcon }}" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px"></dc-import></div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <h1 style="font-size:clamp(22px,2.6vw,28px);font-weight:800;letter-spacing:-0.02em">{{ formTitle }}</h1>
+      <sc-if value="{{ isTambah }}" hint-placeholder-val="{{ true }}"><p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Grup: <span style="font-weight:700;color:var(--c1, oklch(0.23 0.015 60))">Liburan Bali 2026</span></p></sc-if>
+      <sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}"><p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60))">Versi saat ini: <span style="font-family:'Geist Mono',monospace;font-weight:700;color:var(--c1, oklch(0.23 0.015 60))">v2</span></p></sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ formErr }}" hint-placeholder-val="{{ false }}">
+    <div role="alert" style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;border:1px solid var(--c9, oklch(0.86 0.07 27));background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27));font-size:14px">
+      <div style="display:flex;gap:10px;align-items:flex-start"><dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:2px"></dc-import><span>Deskripsi pengeluaran wajib diisi</span></div>
+      <button onClick="{{ closeErr }}" aria-label="Tutup pesan" style="width:28px;height:28px;flex:none;display:grid;place-items:center;border:none;border-radius:6px;background:transparent;color:inherit;cursor:pointer" style-hover="background:var(--c34, oklch(0.92 0.05 27))"><dc-import name="Ikon" n="x" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import></button>
+    </div>
+  </sc-if>
+
+  <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+    <div style="flex:999 1 520px;min-width:0;display:flex;flex-direction:column;gap:24px">
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:20px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label for="deskripsi" style="font-weight:600;font-size:14px">Deskripsi Pengeluaran <span style="color:var(--c18, oklch(0.50 0.18 27))">*</span></label>
+          <input id="deskripsi" value="{{ desk }}" onChange="{{ setDesk }}" placeholder="Contoh: Makan Siang Nasi Padang, Tiket Masuk Wisata" style="width:100%;height:46px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label for="jumlahTotal" style="font-weight:600;font-size:14px">Jumlah Total (Rp) <span style="color:var(--c18, oklch(0.50 0.18 27))">*</span></label>
+            <div style="position:relative">
+              <span style="position:absolute;left:14px;top:13px;font-weight:700;font-size:15px;color:var(--c5, oklch(0.47 0.015 60))">Rp</span>
+              <input id="jumlahTotal" inputmode="numeric" value="{{ totalFmt }}" onChange="{{ setTotal }}" placeholder="0" style="width:100%;height:46px;padding:0 14px 0 44px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:17px;font-weight:800;font-variant-numeric:tabular-nums" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <label for="dibayarOleh" style="font-weight:600;font-size:14px">Dibayar Oleh <span style="color:var(--c18, oklch(0.50 0.18 27))">*</span></label>
+            <select id="dibayarOleh" value="{{ payer }}" onChange="{{ setPayer }}" style="width:100%;height:46px;padding:0 12px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-size:15px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))">
+              <sc-for list="{{ anggota }}" as="o" hint-placeholder-count="4"><option value="{{ o.id }}">{{ o.nama }}</option></sc-for>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:18px">
+        <p id="lbl-split" style="font-weight:600;font-size:14px">Pilih Jenis Pembagian (Split)</p>
+        <div role="radiogroup" aria-labelledby="lbl-split" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:4px;border-radius:12px;background:var(--c8, oklch(0.955 0.008 85))">
+          <sc-for list="{{ splitOpts }}" as="o" hint-placeholder-count="3">
+            <button role="radio" aria-checked="{{ o.on }}" onClick="{{ o.pick }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;padding:6px 4px;border-radius:9px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.c }};box-shadow:{{ o.sh }};font-weight:700;font-size:13px;text-align:center;cursor:pointer" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:1px"><dc-import name="Ikon" n="{{ o.icon }}" hint-size="18px,18px" style="display:inline-block;width:18px;height:18px"></dc-import>{{ o.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--c16, oklch(0.93 0.008 85))">
+          <span style="font-size:14px;font-weight:700">{{ ttlDitanggung }}</span>
+          <button onClick="{{ toggleAll }}" style="background:none;border:none;min-height:40px;padding:0 4px;font-weight:700;font-size:13px;color:var(--c4, oklch(0.44 0.085 162));cursor:pointer" style-hover="text-decoration:underline">{{ toggleAllLabel }}</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;min-height:56px;border-radius:12px;border:1px solid {{ r.bd }};background:{{ r.bg }}">
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;flex:1 1 120px;min-width:0;min-height:36px">
+                <input type="checkbox" checked="{{ r.sel }}" onChange="{{ r.toggle }}" style="width:20px;height:20px;margin:0;accent-color:var(--c4, oklch(0.44 0.085 162));flex:none"></input>
+                <span style="font-size:14px;font-weight:600;color:{{ r.nameC }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.nama }}</span>
+              </label>
+              <sc-if value="{{ r.showRata }}" hint-placeholder-val="{{ true }}"><span style="font-size:14px;font-weight:800;font-variant-numeric:tabular-nums">{{ r.amtTxt }}</span></sc-if>
+              <sc-if value="{{ r.showPct }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <input type="number" min="0" max="100" aria-label="Persentase {{ r.nama }}" value="{{ r.pct }}" onChange="{{ r.setPct }}" placeholder="0" style="width:72px;height:36px;padding:0 8px;border-radius:8px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));text-align:right;font-weight:700;font-size:14px" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+                  <span style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">%</span>
+                  <span style="min-width:88px;text-align:right;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums">{{ r.amtTxt }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.showNom }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <span style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">Rp</span>
+                  <input inputmode="numeric" aria-label="Nominal {{ r.nama }}" value="{{ r.nomFmt }}" onChange="{{ r.setNom }}" placeholder="0" style="width:128px;height:36px;padding:0 10px;border-radius:8px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));text-align:right;font-weight:700;font-size:14px;font-variant-numeric:tabular-nums" style-focus="outline:none;border-color:var(--c4, oklch(0.44 0.085 162));box-shadow:0 0 0 3px var(--c12, oklch(0.44 0.085 162 / 0.2))"></input>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+
+    <aside style="flex:1 1 280px;min-width:0;position:sticky;top:88px;background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:20px;box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04),0 12px 28px -18px oklch(0.23 0.015 60 / 0.2);display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <p style="font-size:13px;font-weight:600;color:var(--c5, oklch(0.47 0.015 60))">Jumlah Total (Rp)</p>
+        <p style="font-size:28px;line-height:1.15;font-weight:800;letter-spacing:-0.02em;font-variant-numeric:tabular-nums">{{ totalTxt }}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;padding:12px 0;border-top:1px solid var(--c16, oklch(0.93 0.008 85));border-bottom:1px solid var(--c16, oklch(0.93 0.008 85))">
+        <div style="display:flex;justify-content:space-between;gap:8px"><span style="color:var(--c5, oklch(0.47 0.015 60))">Dibayar Oleh</span><span style="font-weight:700">{{ payerNama }}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:8px"><span style="color:var(--c5, oklch(0.47 0.015 60))">Jenis Pembagian</span><span style="font-weight:700">{{ splitLabel }}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:8px"><span style="color:var(--c5, oklch(0.47 0.015 60))">Anggota yang Ditanggung</span><span style="font-weight:700">{{ selCount }}/{{ jmlAnggota }}</span></div>
+      </div>
+      <sc-if value="{{ valid }}" hint-placeholder-val="{{ true }}">
+        <div role="status" style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c35, oklch(0.38 0.10 150));font-size:13px;font-weight:600"><dc-import name="Ikon" n="circle-check" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:1px"></dc-import><span>Pembagian valid &amp; total tanggungan sesuai.</span></div>
+      </sc-if>
+      <sc-if value="{{ invalid }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--c10, oklch(0.955 0.03 27));color:var(--c11, oklch(0.47 0.18 27));font-size:13px;font-weight:600"><dc-import name="Ikon" n="triangle-alert" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;margin-top:1px"></dc-import><span>{{ errText }}</span></div>
+      </sc-if>
+      <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+        <button disabled="{{ true }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;opacity:.75;cursor:progress"><span style="width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite"></span>Menyimpan Pengeluaran...</button>
+      </sc-if>
+      <sc-if value="{{ submitReady }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ submit }}" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:15px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">{{ submitLabel }}</button>
+      </sc-if>
+      <sc-if value="{{ submitDisabled }}" hint-placeholder-val="{{ false }}">
+        <button disabled="{{ true }}" style="display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:10px;border:none;background:var(--c20, oklch(0.90 0.015 162));color:var(--c21, oklch(0.42 0.03 162));font-weight:700;font-size:15px;cursor:not-allowed">{{ submitLabel }}</button>
+      </sc-if>
+    </aside>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isSettlement }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Settlement" style="display:flex;flex-direction:column;gap:24px;max-width:920px;margin:0 auto;width:100%">
+  <button onClick="{{ goGrup }}" style="align-self:flex-start;background:none;border:none;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:44px;font-weight:600;font-size:14px;color:var(--c5, oklch(0.47 0.015 60))" style-hover="color:var(--c1, oklch(0.23 0.015 60))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px;border-radius:6px"><dc-import name="Ikon" n="arrow-left" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px"></dc-import>Kembali ke Liburan Bali 2026</button>
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:8px;min-width:0;flex:1 1 320px">
+      <div style="display:flex;align-items:center;gap:10px"><h1 style="font-size:clamp(24px,3vw,32px);line-height:1.15;font-weight:800;letter-spacing:-0.025em">Penyelesaian Utang (Settlement)</h1><dc-import name="Ikon" n="sparkles" hint-size="22px,22px" style="display:inline-block;width:22px;height:22px;flex:none;color:var(--c36, oklch(0.62 0.12 75))"></dc-import></div>
+      <p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60));text-wrap:pretty">Sistem otomatis menyederhanakan transaksi ke jumlah minimum (maksimal n − 1 transaksi untuk n anggota)</p>
+    </div>
+    <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:999px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-size:12px;font-weight:700"><span style="width:7px;height:7px;border-radius:50%;background:var(--c28, oklch(0.55 0.14 150));animation:pulse 1.6s ease-in-out infinite"></span>Real-time Sync</span>
+  </div>
+
+  <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:16px">
+    <h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">Rekomendasi Transaksi Pembayaran</h2>
+    <sc-if value="{{ allLunas }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:32px 20px;border-radius:12px;border:1px solid var(--c31, oklch(0.85 0.06 150));background:var(--c26, oklch(0.95 0.035 150));text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--c37, oklch(0.36 0.10 150))">
+        <dc-import name="Ikon" n="circle-check" hint-size="40px,40px" style="display:inline-block;width:40px;height:40px;color:var(--c38, oklch(0.50 0.13 150))"></dc-import>
+        <h3 style="font-size:18px;font-weight:800">Seluruh Utang Sudah Lunas &amp; Impas!</h3>
+        <p style="font-size:14px;max-width:380px;text-wrap:pretty">Tidak ada tagihan atau piutang yang perlu dibayar antar anggota grup saat ini.</p>
+      </div>
+    </sc-if>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <sc-for list="{{ transaksi }}" as="t" hint-placeholder-count="3">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:14px 16px;border-radius:12px;border:1px solid var(--c3, oklch(0.905 0.01 80));background:var(--c39, oklch(0.985 0.005 85))">
+          <div style="display:flex;align-items:center;gap:10px;min-width:0">
+            <span style="padding:6px 12px;border-radius:8px;background:var(--c40, oklch(0.955 0.025 45));color:var(--c41, oklch(0.46 0.13 45));font-size:14px;font-weight:700">{{ t.dari }}</span>
+            <dc-import name="Ikon" n="arrow-right" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;flex:none;color:var(--c5, oklch(0.47 0.015 60))"></dc-import>
+            <span style="padding:6px 12px;border-radius:8px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-size:14px;font-weight:700">{{ t.ke }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <span style="font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap">{{ t.txt }}</span>
+            <button onClick="{{ t.lunas }}" style="white-space:nowrap;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:13px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="check" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import>Tandai Lunas</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1 1 260px"><h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">Rekap Saldo &amp; Histori Pengeluaran</h2><p style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">Gunakan data yang sama dengan dashboard untuk ekspor CSV / PDF.</p></div>
+      <div style="display:flex;gap:8px">
+        <button style="display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:none;background:var(--c4, oklch(0.44 0.085 162));color:var(--c13, oklch(0.99 0.005 162));font-weight:700;font-size:13px;cursor:pointer" style-hover="background:var(--c14, oklch(0.38 0.08 162))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="download" hint-size="15px,15px" style="display:inline-block;width:15px;height:15px"></dc-import>CSV</button>
+        <button style="display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:700;font-size:13px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><dc-import name="Ikon" n="file-text" hint-size="15px,15px" style="display:inline-block;width:15px;height:15px"></dc-import>PDF</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:12px">
+      <sc-for list="{{ rekap }}" as="k" hint-placeholder-count="4">
+        <div style="padding:14px 16px;border-radius:12px;border:1px solid var(--c3, oklch(0.905 0.01 80));display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+            <div><p style="font-size:14px;font-weight:700">{{ k.nama }}</p><p style="font-size:12px;font-weight:600;color:{{ k.c }}">{{ k.status }}</p></div>
+            <p style="font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;color:{{ k.c }}">{{ k.txt }}</p>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--c5, oklch(0.47 0.015 60))"><p>Total Pengeluaran: {{ k.totTxt }}</p><p>Jumlah Transaksi: {{ k.n }}</p></div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px"><dc-import name="Ikon" n="list-checks" hint-size="16px,16px" style="display:inline-block;width:16px;height:16px;color:var(--c4, oklch(0.44 0.085 162))"></dc-import><h3 style="font-size:15px;font-weight:700">Rincian Pengeluaran per Anggota</h3></div>
+      <sc-for list="{{ rekap }}" as="k" hint-placeholder-count="4">
+        <div style="border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:12px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;background:var(--c42, oklch(0.97 0.006 85))"><p style="font-size:14px;font-weight:700">{{ k.nama }}</p><p style="font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">{{ k.n }} pengeluaran</p></div>
+          <sc-if value="{{ k.none }}" hint-placeholder-val="{{ false }}"><p style="padding:12px 16px;font-size:13px;color:var(--c5, oklch(0.47 0.015 60))">Belum ada pengeluaran yang dibayar oleh anggota ini.</p></sc-if>
+          <sc-for list="{{ k.items }}" as="it" hint-placeholder-count="1">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 16px;padding:12px 16px;border-top:1px solid var(--c16, oklch(0.93 0.008 85))">
+              <div style="min-width:0"><p style="font-size:14px;font-weight:600">{{ it.desk }}</p><p style="font-size:12px;color:var(--c5, oklch(0.47 0.015 60))">{{ it.tglPanjang }} · Jenis split: {{ it.jenisLabel }}</p></div>
+              <p style="font-size:14px;font-weight:800;font-variant-numeric:tabular-nums">{{ it.totalTxt }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:clamp(18px,3vw,28px);box-shadow:0 1px 2px oklch(0.23 0.015 60 / 0.04);display:flex;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:center;gap:10px"><dc-import name="Ikon" n="history" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px;color:var(--c4, oklch(0.44 0.085 162))"></dc-import><h2 style="font-size:18px;font-weight:800;letter-spacing:-0.01em">{{ ttlLunas }}</h2></div>
+    <sc-if value="{{ noLunas }}" hint-placeholder-val="{{ true }}"><p style="font-size:14px;color:var(--c5, oklch(0.47 0.015 60));text-align:center;padding:12px 0">Belum ada riwayat pelunasan tercatat.</p></sc-if>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ riwayat }}" as="h" hint-placeholder-count="0">
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:12px 0;border-top:1px solid var(--c16, oklch(0.93 0.008 85));font-size:14px">
+          <p><strong style="font-weight:700">{{ h.dari }}</strong> <span style="color:var(--c5, oklch(0.47 0.015 60))">melunasi ke</span> <strong style="font-weight:700">{{ h.ke }}</strong></p>
+          <div style="display:flex;align-items:center;gap:10px"><span style="font-weight:800;font-variant-numeric:tabular-nums;color:var(--c43, oklch(0.42 0.11 150))">{{ h.txt }}</span><span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-size:12px;font-weight:700"><dc-import name="Ikon" n="check" hint-size="12px,12px" style="display:inline-block;width:12px;height:12px"></dc-import>Lunas</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</sc-if>
+
+</main>
+</sc-if>
+
+<sc-if value="{{ hasModal }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--c44, oklch(0.23 0.015 60 / 0.5));backdrop-filter:blur(2px)">
+  <div role="dialog" aria-modal="true" aria-labelledby="dlg-title" style="width:100%;max-width:420px;background:var(--c7, oklch(0.998 0.002 85));border:1px solid var(--c3, oklch(0.905 0.01 80));border-radius:16px;padding:24px;box-shadow:0 24px 48px -16px oklch(0.23 0.015 60 / 0.35);display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:40px;height:40px;flex:none;border-radius:12px;display:grid;place-items:center;background:{{ dlg.tileBg }};color:{{ dlg.tileC }}"><dc-import name="Ikon" n="{{ dlg.icon }}" hint-size="20px,20px" style="display:inline-block;width:20px;height:20px"></dc-import></div>
+      <h3 id="dlg-title" style="font-size:18px;font-weight:800">{{ dlg.title }}</h3>
+    </div>
+    <p style="font-size:14px;line-height:1.6;color:var(--c5, oklch(0.47 0.015 60));text-wrap:pretty">{{ dlg.body }}</p>
+    <sc-if value="{{ dlg.tx }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;border:1px solid var(--c3, oklch(0.905 0.01 80));background:var(--c39, oklch(0.985 0.005 85))">
+        <div style="display:flex;align-items:center;gap:8px"><span style="padding:4px 10px;border-radius:8px;background:var(--c40, oklch(0.955 0.025 45));color:var(--c41, oklch(0.46 0.13 45));font-size:13px;font-weight:700">{{ dlg.dari }}</span><dc-import name="Ikon" n="arrow-right" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px;color:var(--c5, oklch(0.47 0.015 60))"></dc-import><span style="padding:4px 10px;border-radius:8px;background:var(--c26, oklch(0.95 0.035 150));color:var(--c27, oklch(0.40 0.10 150));font-size:13px;font-weight:700">{{ dlg.ke }}</span></div>
+        <span style="font-size:17px;font-weight:800;font-variant-numeric:tabular-nums">{{ dlg.amt }}</span>
+      </div>
+    </sc-if>
+    <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;padding-top:4px">
+      <button onClick="{{ closeModal }}" style="min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--c6, oklch(0.83 0.012 80));background:var(--c7, oklch(0.998 0.002 85));font-weight:600;font-size:14px;cursor:pointer" style-hover="background:var(--c8, oklch(0.955 0.008 85))" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px">Batal</button>
+      <button onClick="{{ confirmModal }}" style="display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 16px;border-radius:10px;border:none;background:{{ dlg.btnBg }};color:{{ dlg.btnC }};font-weight:700;font-size:14px;cursor:pointer" style-focus="outline:2px solid var(--c4, oklch(0.44 0.085 162));outline-offset:2px"><sc-if value="{{ dlg.refresh }}" hint-placeholder-val="{{ false }}"><dc-import name="Ikon" n="refresh-cw" hint-size="14px,14px" style="display:inline-block;width:14px;height:14px"></dc-import></sc-if>{{ dlg.btn }}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;page&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;login&quot;,&quot;verifikasi&quot;,&quot;dashboard&quot;,&quot;buat&quot;,&quot;gabung&quot;,&quot;grup&quot;,&quot;tambah&quot;,&quot;edit&quot;,&quot;settlement&quot;],&quot;default&quot;:&quot;dashboard&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(p) {
+    super(p);
+    const q = new URLSearchParams(location.search);
+    const page = q.get('p') || this.props.page || 'dashboard';
+    const s = q.get('s') || '';
+    const edit = page === 'edit';
+    this.state = {
+      page, s, modal: q.get('m') || null, copied: false, showAdd: q.get('add') === '1',
+      namaTanpa: '', extra: [], namaGrup: s === 'isi' ? 'Kos Melati' : '', kode: s === 'isi' ? 'a1b2c3d4' : '',
+      desk: edit ? 'Tiket Masuk Wisata' : 'Makan Malam Seafood', total: edit ? '300000' : '360000',
+      payer: edit ? 'a2' : 'a1', split: edit ? 'nominal_pasti' : (s === 'invalid' ? 'persentase' : 'sama_rata'),
+      selected: edit ? ['a1', 'a2', 'a3'] : ['a1', 'a2', 'a3', 'a4'],
+      pct: s === 'invalid' ? { a1: '40', a2: '30', a3: '20', a4: '' } : {},
+      nom: edit ? { a1: '100000', a2: '100000', a3: '100000' } : {},
+      formErr: false, lunas: s === 'lunas' ? [0, 1, 2] : [],
+      theme: q.get('t') || this.props.theme || 'light', pendingTx: q.get('m') === 'lunas' ? 0 : null, linkCopied: false,
+    };
+  }
+  rp(n) { return 'Rp ' + Math.abs(n).toLocaleString('id-ID'); }
+  go(page) { this.setState({ page, s: '', modal: null }); try { window.scrollTo(0, 0); } catch (e) {} }
+  hitung() {
+    const { selected, total, split, pct, nom } = this.state;
+    const T = parseInt(String(total).replace(/\D/g, ''), 10) || 0;
+    if (!selected.length) return { ok: false, err: 'Pilih minimal 1 anggota untuk membagi pengeluaran', map: {} };
+    if (T <= 0) return { ok: false, err: 'Jumlah total harus lebih dari 0', map: {} };
+    const map = {};
+    if (split === 'sama_rata') {
+      const base = Math.floor(T / selected.length); let rem = T - base * selected.length;
+      selected.forEach(id => { map[id] = base + (rem > 0 ? (rem--, 1) : 0); });
+      return { ok: true, map };
+    }
+    if (split === 'persentase') {
+      let sum = 0, acc = 0;
+      selected.forEach(id => { sum += parseFloat(pct[id] || '0') || 0; });
+      selected.forEach((id, i) => { const v = Math.round((parseFloat(pct[id] || '0') || 0) / 100 * T); map[id] = i === selected.length - 1 ? T - acc : v; acc += v; });
+      if (Math.abs(sum - 100) > 0.01) return { ok: false, err: `Total persentase harus 100% (saat ini: ${sum.toFixed(1)}%)`, map };
+      return { ok: true, map };
+    }
+    let sum = 0;
+    selected.forEach(id => { const v = parseInt((nom[id] || '0').replace(/\D/g, ''), 10) || 0; map[id] = v; sum += v; });
+    if (sum !== T) { const d = T - sum; return { ok: false, err: `Total nominal (Rp ${sum.toLocaleString('id-ID')}) ${d > 0 ? 'kurang' : 'lebih'} Rp ${Math.abs(d).toLocaleString('id-ID')} dari Jumlah Total (Rp ${T.toLocaleString('id-ID')})`, map }; }
+    return { ok: true, map };
+  }
+  renderVals() {
+    const st = this.state, s = st.s, page = st.page;
+    const JL = { sama_rata: 'Sama Rata', persentase: 'Persentase', nominal_pasti: 'Nominal Pasti' };
+    const baseAng = [
+      { id: 'a1', nama: 'Fajar', akun: true, owner: true, join: '12 Okt' },
+      { id: 'a2', nama: 'Budi', akun: true, join: '12 Okt' },
+      { id: 'a3', nama: 'Sari', akun: true, join: '13 Okt' },
+      { id: 'a4', nama: 'Dimas', akun: false, join: '13 Okt' }, ...st.extra];
+    const nm = id => (baseAng.find(a => a.id === id) || {}).nama;
+    const anggota = baseAng.map(a => ({ ...a, init: a.nama.charAt(0).toUpperCase(), owner: !!a.owner,
+      avBg: a.akun ? 'var(--c15, oklch(0.945 0.03 162))' : 'var(--c45, oklch(0.94 0.008 85))', avC: a.akun ? 'var(--c14, oklch(0.38 0.08 162))' : 'var(--c46, oklch(0.45 0.015 60))',
+      status: a.akun ? 'Berakun' : 'Tanpa Akun', statusIcon: a.akun ? 'user-check' : 'user-x',
+      statusC: a.akun ? 'var(--c38, oklch(0.50 0.13 150))' : 'var(--c47, oklch(0.58 0.12 70))',
+      statusTitle: a.akun ? 'Anggota Terdaftar (Berakun)' : 'Anggota Ditambahkan Manual (Tanpa Akun)' }));
+    const raw = s === 'kosong' ? [] : [
+      { id: 'p3', desk: 'Sewa Motor', by: 'a3', total: 450000, jenis: 'sama_rata', v: 1, tgl: '15 Okt, 16.40', tglPanjang: '15 Okt 2026', bagi: { a1: 150000, a2: 150000, a3: 150000 } },
+      { id: 'p2', desk: 'Tiket Masuk Wisata', by: 'a2', total: 300000, jenis: 'nominal_pasti', v: 2, tgl: '15 Okt, 09.15', tglPanjang: '15 Okt 2026', bagi: { a1: 100000, a2: 100000, a3: 100000 } },
+      { id: 'p1', desk: 'Makan Siang Nasi Padang', by: 'a1', total: 240000, jenis: 'sama_rata', v: 1, tgl: '14 Okt, 12.30', tglPanjang: '14 Okt 2026', bagi: { a1: 60000, a2: 60000, a3: 60000, a4: 60000 } }];
+    const pengeluaran = raw.map(p => ({ ...p, payer: nm(p.by), jenisLabel: JL[p.jenis], totalTxt: this.rp(p.total),
+      bagi: Object.keys(p.bagi).map(k => ({ nama: nm(k), txt: this.rp(p.bagi[k]) })),
+      goEdit: () => this.go('edit'), askHapusPengeluaran: () => this.setState({ modal: 'hapusPengeluaran' }) }));
+    const saldoNum = {};
+    baseAng.forEach(a => saldoNum[a.id] = 0);
+    raw.forEach(p => { saldoNum[p.by] += p.total; Object.keys(p.bagi).forEach(k => saldoNum[k] -= p.bagi[k]); });
+    const allTx = [{ d: 'a1', k: 'a3', j: 70000 }, { d: 'a4', k: 'a3', j: 60000 }, { d: 'a2', k: 'a3', j: 10000 }];
+    st.lunas.forEach(i => { const t = allTx[i]; saldoNum[t.d] += t.j; saldoNum[t.k] -= t.j; });
+    const tone = v => v > 0 ? { c: 'var(--c43, oklch(0.42 0.11 150))', bg: 'var(--c48, oklch(0.96 0.03 150))', bd: 'var(--c49, oklch(0.86 0.06 150))', label: 'Piutang', icon: 'trending-up', cap: 'Berhak menerima pembayaran', status: 'Piutang' }
+      : v < 0 ? { c: 'var(--c50, oklch(0.48 0.13 45))', bg: 'var(--c51, oklch(0.965 0.02 45))', bd: 'var(--c52, oklch(0.88 0.05 45))', label: 'Utang', icon: 'trending-down', cap: 'Wajib membayar', status: 'Utang' }
+      : { c: 'var(--c5, oklch(0.47 0.015 60))', bg: 'var(--c7, oklch(0.998 0.002 85))', bd: 'var(--c3, oklch(0.905 0.01 80))', label: 'Imbang', icon: 'scale', cap: 'Tidak ada tagihan/utang', status: 'Impas' };
+    const fmtS = v => (v > 0 ? '+' : v < 0 ? '−' : '') + this.rp(v);
+    const saldo = baseAng.map(a => ({ nama: a.nama, txt: fmtS(saldoNum[a.id]), ...tone(saldoNum[a.id]) }));
+    const rekap = baseAng.map(a => { const items = pengeluaran.filter(p => p.by === a.id); return { nama: a.nama, txt: fmtS(saldoNum[a.id]), ...tone(saldoNum[a.id]), n: items.length, none: items.length === 0, items, totTxt: this.rp(items.reduce((x, p) => x + p.total, 0)) }; });
+    const transaksi = allTx.map((t, i) => ({ ...t, i })).filter(t => !st.lunas.includes(t.i)).map(t => ({ dari: nm(t.d), ke: nm(t.k), txt: this.rp(t.j), lunas: () => this.setState({ modal: 'lunas', pendingTx: t.i }) }));
+    const riwayat = st.lunas.slice().reverse().map(i => ({ dari: nm(allTx[i].d), ke: nm(allTx[i].k), txt: this.rp(allTx[i].j) }));
+    // form
+    const h = this.hitung(), isEdit = page === 'edit';
+    const T = parseInt(String(st.total).replace(/\D/g, ''), 10) || 0;
+    const splitOpts = [['sama_rata', 'Sama Rata', 'users'], ['persentase', 'Persentase (%)', 'chart-pie'], ['nominal_pasti', 'Nominal Pasti', 'banknote']].map(([k, label, icon]) => {
+      const on = st.split === k;
+      return { label, icon, on, pick: () => this.setState({ split: k }), bd: on ? 'var(--c53, oklch(0.44 0.085 162 / 0.35))' : 'transparent', bg: on ? 'var(--c7, oklch(0.998 0.002 85))' : 'transparent', c: on ? 'var(--c14, oklch(0.38 0.08 162))' : 'var(--c46, oklch(0.45 0.015 60))', sh: on ? '0 1px 3px oklch(0.23 0.015 60 / 0.12)' : 'none' };
+    });
+    const rows = baseAng.map(a => { const sel = st.selected.includes(a.id); return {
+      nama: a.nama, sel, bd: sel ? 'var(--c54, oklch(0.44 0.085 162 / 0.3))' : 'var(--c3, oklch(0.905 0.01 80))', bg: sel ? 'var(--c55, oklch(0.945 0.03 162 / 0.45))' : 'var(--c7, oklch(0.998 0.002 85))', nameC: sel ? 'var(--c1, oklch(0.23 0.015 60))' : 'var(--c5, oklch(0.47 0.015 60))',
+      showRata: sel && st.split === 'sama_rata', showPct: sel && st.split === 'persentase', showNom: sel && st.split === 'nominal_pasti',
+      amtTxt: this.rp(h.map[a.id] || 0), pct: st.pct[a.id] || '', nomFmt: st.nom[a.id] ? (parseInt(st.nom[a.id], 10) || 0).toLocaleString('id-ID') : '',
+      toggle: () => this.setState({ selected: sel ? st.selected.filter(x => x !== a.id) : [...st.selected, a.id] }),
+      setPct: e => this.setState({ pct: { ...st.pct, [a.id]: e.target.value } }),
+      setNom: e => this.setState({ nom: { ...st.nom, [a.id]: e.target.value.replace(/\D/g, '') } }) }; });
+    const loading = s === 'loading';
+    const pt = allTx[st.pendingTx ?? 0];
+    const DNG = { tileBg: 'var(--c10, oklch(0.955 0.03 27))', tileC: 'var(--c18, oklch(0.50 0.18 27))', btnBg: 'var(--c18, oklch(0.50 0.18 27))', btnC: 'var(--c56, oklch(0.99 0.005 85))', refresh: false, tx: false };
+    const dlgs = {
+      hapusPengeluaran: { ...DNG, title: 'Hapus Pengeluaran?', body: 'Apakah Anda yakin ingin menghapus catatan pengeluaran ini? Tindakan ini tidak dapat dibatalkan.', btn: 'Hapus', icon: 'trash-2' },
+      hapusGrup: { ...DNG, title: 'Hapus Grup?', body: 'Menghapus grup akan menghapus semua data grup secara permanen, termasuk anggota, pengeluaran, dan riwayat settlement.', btn: 'Hapus Grup', icon: 'trash-2' },
+      konflik: { ...DNG, title: 'Konflik Versi Data', body: 'Data pengeluaran ini telah diubah oleh anggota lain saat Anda sedang mengeditnya. Perubahan Anda tidak disimpan untuk mencegah data tertimpa.', btn: 'Muat Ulang Data Terbaru', icon: 'triangle-alert', btnBg: 'var(--c4, oklch(0.44 0.085 162))', btnC: 'var(--c13, oklch(0.99 0.005 162))', refresh: true },
+      lunas: { title: 'Tandai Lunas?', body: 'Pastikan pembayaran ini sudah benar-benar dilakukan. Setelah ditandai, saldo kedua anggota langsung diperbarui dan transaksi masuk ke Riwayat Pelunasan.', btn: 'Ya, Tandai Lunas', icon: 'circle-check', tileBg: 'var(--c26, oklch(0.95 0.035 150))', tileC: 'var(--c43, oklch(0.42 0.11 150))', btnBg: 'var(--c4, oklch(0.44 0.085 162))', btnC: 'var(--c13, oklch(0.99 0.005 162))', refresh: false, tx: true, dari: nm(pt.d), ke: nm(pt.k), amt: this.rp(pt.j) } };
+    return {
+      isApp: !['login', 'verifikasi'].includes(page), isLogin: page === 'login', isVerifikasi: page === 'verifikasi',
+      isDashboard: page === 'dashboard', isBuat: page === 'buat', isGabung: page === 'gabung', isBuatOrGabung: page === 'buat' || page === 'gabung',
+      isGrup: page === 'grup', isForm: page === 'tambah' || isEdit, isTambah: page === 'tambah', isEdit, isSettlement: page === 'settlement',
+      isLoading: loading, notLoading: !loading, isError: s === 'error', isEmpty: s === 'kosong', hasGrup: !['kosong', 'loading', 'error'].includes(s),
+      three: [1, 2, 3],
+      grupList: [{ nama: 'Liburan Bali 2026', n: 4, kode: 'a1b2c3d4', tgl: '12 Okt' }, { nama: 'Kos Melati', n: 3, kode: 'k9m2x7q1', tgl: '2 Sep' }].map(g => ({ ...g, open: () => this.go('grup') })),
+      goDashboard: () => this.go('dashboard'), goLogin: e => { e && e.preventDefault && e.preventDefault(); this.go('login'); }, goVerifikasi: () => this.go('verifikasi'),
+      goBuat: () => this.go('buat'), goGabung: () => this.go('gabung'), goGrup: () => this.go('grup'), openGrup: () => this.go('grup'),
+      goTambah: () => this.go('tambah'), goSettlement: () => this.go('settlement'),
+      namaGrup: st.namaGrup, setNamaGrup: e => this.setState({ namaGrup: e.target.value }),
+      buatReady: !loading && !!st.namaGrup.trim(), buatDisabled: !loading && !st.namaGrup.trim(),
+      kode: st.kode, setKode: e => this.setState({ kode: e.target.value }),
+      gabungReady: !!st.kode.trim(), gabungDisabled: !st.kode.trim(),
+      hasPengeluaran: raw.length > 0, noPengeluaran: raw.length === 0, jmlPengeluaran: raw.length, pengeluaran, saldo,
+      copied: st.copied, notCopied: !st.copied,
+      copy: () => { try { navigator.clipboard.writeText('a1b2c3d4'); } catch (e) {} this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 2000); },
+      anggota, jmlAnggota: baseAng.length, adding: st.showAdd, notAdding: !st.showAdd,
+      openAdd: () => this.setState({ showAdd: true }), closeAdd: () => this.setState({ showAdd: false, namaTanpa: '' }),
+      namaTanpa: st.namaTanpa, namaTanpaEmpty: !st.namaTanpa.trim(), setNamaTanpa: e => this.setState({ namaTanpa: e.target.value }),
+      simpanAnggota: () => { const n = st.namaTanpa.trim(); if (!n) return; this.setState({ extra: [...st.extra, { id: 'x' + Date.now(), nama: n, akun: false, join: '29 Okt' }], namaTanpa: '', showAdd: false }); },
+      askHapusGrup: () => this.setState({ modal: 'hapusGrup' }),
+      formTitle: isEdit ? 'Edit Pengeluaran' : 'Catat Pengeluaran Baru', formIcon: isEdit ? 'pen-line' : 'circle-plus',
+      formErr: st.formErr || s === 'error', closeErr: () => this.setState({ formErr: false, s: '' }),
+      desk: st.desk, setDesk: e => this.setState({ desk: e.target.value }),
+      totalFmt: T > 0 ? T.toLocaleString('id-ID') : '', setTotal: e => this.setState({ total: e.target.value.replace(/\D/g, '') }),
+      totalTxt: this.rp(T), payer: st.payer, setPayer: e => this.setState({ payer: e.target.value }), payerNama: nm(st.payer),
+      splitOpts, splitLabel: JL[st.split], rows, selCount: st.selected.length,
+      toggleAll: () => this.setState({ selected: st.selected.length === baseAng.length ? [] : baseAng.map(a => a.id) }),
+      toggleAllLabel: st.selected.length === baseAng.length ? 'Batal Pilih Semua' : 'Pilih Semua',
+      valid: h.ok, invalid: !h.ok, errText: h.err,
+      submitReady: !loading && h.ok, submitDisabled: !loading && !h.ok, submitLabel: isEdit ? 'Simpan Perubahan' : 'Tambah Pengeluaran',
+      submit: () => { if (!st.desk.trim()) return this.setState({ formErr: true }); if (isEdit) return this.setState({ modal: 'konflik' }); this.go('grup'); },
+      ttlRiwayat: `Riwayat Pengeluaran (${raw.length})`, ttlAnggota: `Anggota Grup (${baseAng.length})`, ttlLunas: `Riwayat Pelunasan (${st.lunas.length})`, ttlDitanggung: `Anggota yang Ditanggung (${st.selected.length}/${baseAng.length})`,
+      transaksi, allLunas: transaksi.length === 0, rekap, riwayat, jmlLunas: riwayat.length, noLunas: riwayat.length === 0,
+      hasModal: !!st.modal, dlg: dlgs[st.modal] || dlgs.hapusGrup,
+      closeModal: () => this.setState({ modal: null }),
+      confirmModal: () => { const m = st.modal; if (m === 'hapusGrup') return this.go('dashboard'); if (m === 'lunas' && st.pendingTx != null && !st.lunas.includes(st.pendingTx)) return this.setState({ modal: null, lunas: [...st.lunas, st.pendingTx], pendingTx: null }); this.setState({ modal: null }); },
+      theme: st.theme, themeIcon: st.theme === 'dark' ? 'sun' : 'moon', themeLabel: st.theme === 'dark' ? 'Mode terang' : 'Mode gelap',
+      toggleTheme: () => this.setState({ theme: st.theme === 'dark' ? 'light' : 'dark' }),
+      linkCopied: st.linkCopied, notLinkCopied: !st.linkCopied,
+      copyLink: () => { try { navigator.clipboard.writeText(location.origin + '/grup/gabung?kode=a1b2c3d4'); } catch (e) {} this.setState({ linkCopied: true }); setTimeout(() => this.setState({ linkCopied: false }), 2000); },
+    };
+  }
+}
+</script>
+</body>
+</html>
