@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, ReactNode } from "react";
+import { Alert } from "@/components/ui/Alert";
 
 interface SettlementErrorBoundaryProps {
   children: ReactNode;
@@ -31,20 +32,17 @@ export class SettlementErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
-          <h2 className="text-lg font-bold text-destructive">
-            Terjadi kesalahan.
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+        <Alert size="lg" title="Terjadi kesalahan.">
+          <p className="mt-1 font-normal">
             Kami tidak dapat menampilkan komponen settlement saat ini. Silakan
             muat ulang halaman.
           </p>
           {this.state.error?.message ? (
-            <p className="mt-3 text-xs text-destructive/80">
+            <p className="mt-2 font-mono text-xs font-normal">
               {this.state.error.message}
             </p>
           ) : null}
-        </div>
+        </Alert>
       );
     }
 

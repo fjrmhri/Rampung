@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useBuatGrup } from "@/hooks/useGrup";
-import { ArrowLeft, Users, Loader2 } from "lucide-react";
+import { Users } from "lucide-react";
+import { Alert } from "@/components/ui/Alert";
+import { BackLink } from "@/components/ui/BackLink";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Field } from "@/components/ui/Field";
+import { IconTile } from "@/components/ui/IconTile";
+import { Input } from "@/components/ui/Input";
 
 export default function BuatGrupPage() {
   const router = useRouter();
@@ -28,99 +34,66 @@ export default function BuatGrupPage() {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-8 sm:py-12">
-      {/* Tombol kembali */}
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Dashboard
-      </Link>
+    <div className="mx-auto flex max-w-[560px] flex-col gap-5">
+      <BackLink href="/dashboard">Kembali ke Dashboard</BackLink>
 
-      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Users className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">
+      <Card className="flex flex-col gap-6 p-[clamp(20px,4vw,32px)] shadow-xs">
+        <div className="flex items-center gap-3.5">
+          <IconTile icon={Users} size="md" />
+          <div className="flex flex-col gap-0.5">
+            <h1 className="text-[22px] font-extrabold tracking-[-0.02em]">
               Buat Grup Baru
             </h1>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Mulai patungan dan kelola utang bersama teman
             </p>
           </div>
         </div>
 
-        {buatGrup.isError && (
-          <div
-            role="alert"
-            className="mb-6 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-          >
-            {buatGrup.error.message}
-          </div>
-        )}
+        {buatGrup.isError && <Alert>{buatGrup.error.message}</Alert>}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-1.5">
-            <label
-              htmlFor="nama"
-              className="block text-sm font-medium text-foreground"
-            >
-              Nama Grup <span className="text-destructive">*</span>
-            </label>
-            <input
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <Field label="Nama Grup" htmlFor="nama" required>
+            <Input
               id="nama"
               type="text"
               required
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               placeholder="Contoh: Liburan Bali 2026, Kos Melati"
-              className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
             />
-          </div>
+          </Field>
 
-          <div className="space-y-1.5">
-            <label
-              htmlFor="namaPemilik"
-              className="block text-sm font-medium text-foreground"
-            >
-              Nama Anda di Grup{" "}
-              <span className="text-xs text-muted-foreground">(Opsional)</span>
-            </label>
-            <input
+          <Field label="Nama Anda di Grup" htmlFor="namaPemilik" optional>
+            <Input
               id="namaPemilik"
               type="text"
               value={namaPemilik}
               onChange={(e) => setNamaPemilik(e.target.value)}
               placeholder="Nama yang ingin tampil di grup (misal: Budi)"
-              className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
             />
-          </div>
+          </Field>
 
-          <p className="text-xs text-muted-foreground">
-            💡 Sebagai pembuat grup, Anda akan otomatis terdaftar sebagai
-            anggota pertama. Jika ingin tampil berbeda, isi &quot;Nama Anda di Grup&quot;.
-          </p>
+          <Alert variant="info">
+            <span className="text-pretty">
+              Sebagai pembuat grup, Anda akan otomatis terdaftar sebagai anggota
+              pertama. Jika ingin tampil berbeda, isi &quot;Nama Anda di
+              Grup&quot;.
+            </span>
+          </Alert>
 
-          <button
+          <Button
             id="btn-submit-buat-grup"
             type="submit"
-            disabled={buatGrup.isPending || !nama.trim()}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow hover:opacity-90 active:opacity-80 disabled:opacity-50 transition"
+            size="lg"
+            fullWidth
+            loading={buatGrup.isPending}
+            disabled={!nama.trim()}
           >
-            {buatGrup.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Membuat Grup...
-              </>
-            ) : (
-              "Buat Grup"
-            )}
-          </button>
+            {buatGrup.isPending ? "Membuat Grup..." : "Buat Grup"}
+          </Button>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

@@ -1,4 +1,9 @@
+import Link from "next/link";
+import { Mail } from "lucide-react";
 import { decodeAman } from "@/utils/decodeAman";
+import { Alert } from "@/components/ui/Alert";
+import { Card } from "@/components/ui/Card";
+import { IconTile } from "@/components/ui/IconTile";
 
 interface VerifikasiPageProps {
   searchParams: Promise<{ email?: string; error?: string; next?: string }>;
@@ -9,6 +14,9 @@ export const metadata = {
   description: "Buka tautan yang kami kirim ke email Anda untuk masuk.",
 };
 
+const linkClass =
+  "rounded-xs text-primary underline underline-offset-2 transition-colors duration-150 hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2";
+
 export default async function VerifikasiPage({
   searchParams,
 }: VerifikasiPageProps) {
@@ -17,54 +25,51 @@ export default async function VerifikasiPage({
   // Jika tidak ada email, kembalikan ke halaman login
   if (!email) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background px-4">
-        <p className="text-muted-foreground text-sm">
+      <div className="grid flex-1 place-items-center px-4 py-12">
+        <p className="text-sm text-muted-foreground">
           Email tidak ditemukan.{" "}
-          <a href="/login" className="underline text-foreground">
+          <Link href="/login" className={linkClass}>
             Kembali ke login
-          </a>
+          </Link>
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+    <div className="grid flex-1 place-items-center px-4 py-12">
+      <div className="flex w-full max-w-[420px] flex-col items-center gap-6 text-center">
+        <IconTile icon={Mail} size="xl" />
+
+        <div className="flex flex-col gap-2">
+          <h1 className="text-[28px] leading-[1.15] font-extrabold tracking-[-0.02em]">
             Cek email Anda
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="text-[15px] break-words text-muted-foreground">
             Kami telah mengirim tautan masuk ke{" "}
-            <span className="font-medium text-foreground">{email}</span>
+            <span className="font-bold text-foreground">{email}</span>
           </p>
         </div>
 
         {error && (
-          <div
-            role="alert"
-            className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-          >
-            {decodeAman(error)}
-          </div>
+          <Alert className="w-full text-left">{decodeAman(error)}</Alert>
         )}
 
-        <div className="rounded-lg border border-border/60 bg-card/60 p-4 text-sm text-muted-foreground">
-          <p className="mb-2 font-medium text-foreground">
+        <Card className="flex w-full flex-col gap-1.5 p-5 text-left text-sm text-muted-foreground">
+          <p className="font-bold text-foreground">
             Buka tautan di email Anda untuk masuk.
           </p>
-          <p>
+          <p className="text-pretty">
             Setelah Anda mengklik tautan, Anda akan diarahkan ke aplikasi secara
             otomatis. Jika email belum muncul, cek folder spam atau promo.
           </p>
-        </div>
+        </Card>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           Tidak menerima email?{" "}
-          <a href="/login" className="underline text-foreground">
+          <Link href="/login" className={linkClass}>
             Kembali ke halaman login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

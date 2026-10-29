@@ -1,6 +1,10 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { LogOut } from "lucide-react";
 import { logout } from "@/app/(auth)/login/actions";
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 
 /**
  * Layout dashboard — memverifikasi sesi di sisi server sebagai
@@ -25,28 +29,36 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Navbar sederhana */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-          <span className="font-bold tracking-tight">Rampung</span>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-muted-foreground sm:block">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/92 backdrop-blur-[8px]">
+        <div className="mx-auto flex h-16 max-w-[1120px] items-center justify-between gap-4 px-[clamp(16px,4vw,32px)]">
+          <Link
+            href="/dashboard"
+            className="flex min-h-11 shrink-0 items-center gap-2.5 rounded-xs text-[19px] font-extrabold tracking-[-0.02em] focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <span aria-hidden="true" className="size-3 rounded-[3px] bg-primary" />
+            Rampung
+          </Link>
+          <div className="flex min-w-0 items-center gap-2">
+            <span
+              title={user.email}
+              className="mr-1 min-w-0 truncate text-sm text-muted-foreground"
+            >
               {user.email}
             </span>
-            <form action={logout}>
-              <button
-                id="btn-logout"
-                type="submit"
-                className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted transition"
-              >
+            <ThemeToggle />
+            <form action={logout} className="shrink-0">
+              <Button id="btn-logout" type="submit" variant="secondary" size="sm">
+                <LogOut aria-hidden="true" className="size-3.5" />
                 Keluar
-              </button>
+              </Button>
             </form>
           </div>
         </div>
       </header>
 
-      <main className="flex-1">{children}</main>
+      <main className="mx-auto w-full max-w-[1120px] flex-1 px-[clamp(16px,4vw,32px)] pt-[clamp(24px,4vw,40px)] pb-[72px]">
+        {children}
+      </main>
     </div>
   );
 }

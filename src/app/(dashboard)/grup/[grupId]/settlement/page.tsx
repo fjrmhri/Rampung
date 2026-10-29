@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo } from "react";
+import { use, useMemo, useState } from "react";
 import Link from "next/link";
 import { useGrupDetail } from "@/hooks/useGrup";
 import { useDaftarPengeluaran } from "@/hooks/usePengeluaran";
@@ -11,18 +11,33 @@ import { SettlementErrorBoundary } from "@/components/settlement/SettlementError
 import { hitungSettlementGrup } from "@/utils/konversiSaldoToInput";
 import {
   ArrowLeft,
-  CheckCircle2,
+  CircleCheck,
   ArrowRight,
   Sparkles,
   History,
-  Loader2,
   Check,
-  Radio,
 } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { formatRupiah } from "@/utils/format";
+import { Alert } from "@/components/ui/Alert";
+import { BackLink } from "@/components/ui/BackLink";
+import { Badge, LiveBadge } from "@/components/ui/Badge";
+import { Button, buttonVariants } from "@/components/ui/Button";
+import { Card, CardTitle } from "@/components/ui/Card";
+import { Dialog } from "@/components/ui/Dialog";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface SettlementPageProps {
   params: Promise<{ grupId: string }>;
 }
+
+interface PendingTx {
+  dariId: string;
+  keId: string;
+  jumlah: number;
+}
+
+const kartuSettlement = "flex flex-col p-[clamp(18px,3vw,28px)] shadow-xs";
 
 export default function SettlementPage({ params }: SettlementPageProps) {
   const { grupId } = use(params);
@@ -52,6 +67,9 @@ export default function SettlementPage({ params }: SettlementPageProps) {
     useDaftarPelunasan(grupId);
 
   const tandaiLunas = useTandaiLunas();
+
+  // Transaksi yang menunggu konfirmasi di dialog "Tandai Lunas?"
+  const [pendingTx, setPendingTx] = useState<PendingTx | null>(null);
 
   const isLoading =
     loadingGrup || loadingSaldo || loadingPelunasan || loadingPengeluaran;
@@ -84,43 +102,43 @@ export default function SettlementPage({ params }: SettlementPageProps) {
     }
   };
 
+  const konfirmasiLunas = async () => {
+    if (!pendingTx) return;
+    await handleLunas(pendingTx.dariId, pendingTx.keId, pendingTx.jumlah);
+    setPendingTx(null);
+  };
+
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[60vh] items-center justify-center text-primary">
+        <Spinner className="size-8" />
       </div>
     );
   }
 
   if (loadingGrupError || loadingSaldoError || loadingPengeluaranError) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-12">
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
-          <h2 className="text-lg font-bold text-destructive">
-            Terjadi kesalahan saat memuat data settlement.
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+      <div className="mx-auto max-w-[920px] py-12">
+        <Alert size="lg" title="Terjadi kesalahan saat memuat data settlement.">
+          <p className="mt-1 font-normal">
             {grupError?.message ||
               saldoError?.message ||
               pengeluaranError?.message ||
               "Silakan muat ulang halaman."}
           </p>
-        </div>
+        </Alert>
       </div>
     );
   }
 
   if (!grup) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-12 text-center">
-        <p className="text-sm font-medium text-destructive">
+      <div className="mx-auto flex max-w-lg flex-col items-center gap-4 py-12 text-center">
+        <p className="text-sm font-semibold text-destructive-fg-soft">
           Grup tidak ditemukan
         </p>
-        <Link
-          href="/dashboard"
-          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
+        <Link href="/dashboard" className={buttonVariants({ variant: "text" })}>
+          <ArrowLeft aria-hidden="true" className="size-4" />
           Kembali ke Dashboard
         </Link>
       </div>
@@ -128,56 +146,56 @@ export default function SettlementPage({ params }: SettlementPageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 space-y-8">
-      {/* Tombol kembali */}
-      <Link
-        href={`/grup/${grupId}`}
-        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke {grup.nama}
-      </Link>
+    <div className="mx-auto flex w-full max-w-[920px] flex-col gap-6">
+      <BackLink href={`/grup/${grupId}`}>{`Kembali ke ${grup.nama}`}</BackLink>
 
       {/* Header Halaman Settlement */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div className="flex min-w-0 flex-[1_1_320px] flex-col gap-2">
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-[clamp(24px,3vw,32px)] leading-[1.15] font-extrabold tracking-[-0.025em]">
               Penyelesaian Utang (Settlement)
             </h1>
-            <Sparkles className="h-5 w-5 text-amber-500 animate-pulse" />
+            <Sparkles
+              aria-hidden="true"
+              className="size-[22px] shrink-0 text-accent-strong"
+            />
           </div>
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="text-sm text-pretty text-muted-foreground">
             Sistem otomatis menyederhanakan transaksi ke jumlah minimum
             (maksimal n &minus; 1 transaksi untuk n anggota)
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 shrink-0">
-          <Radio className="h-3 w-3 animate-pulse text-emerald-500" />
-          <span>Real-time Sync</span>
-        </div>
+        <LiveBadge>Real-time Sync</LiveBadge>
       </div>
 
       {/* Kartu Hasil Rekomendasi Settlement */}
-      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm space-y-6">
-        <h2 className="text-base font-bold text-foreground">
+      <Card
+        as="section"
+        aria-labelledby="judul-rekomendasi"
+        className={cn(kartuSettlement, "gap-4")}
+      >
+        <h2
+          id="judul-rekomendasi"
+          className="text-lg font-extrabold tracking-[-0.01em]"
+        >
           Rekomendasi Transaksi Pembayaran
         </h2>
 
         {transaksiSettlement.length === 0 ? (
-          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-8 text-center space-y-2">
-            <CheckCircle2 className="mx-auto h-10 w-10 text-emerald-500" />
-            <h3 className="text-lg font-bold text-emerald-700 dark:text-emerald-300">
+          <div className="flex flex-col items-center gap-2 rounded-lg border border-positive-border bg-positive-soft px-5 py-8 text-center text-positive">
+            <CircleCheck aria-hidden="true" className="size-10" />
+            <h3 className="text-lg font-extrabold">
               Seluruh Utang Sudah Lunas &amp; Impas!
             </h3>
-            <p className="text-xs text-emerald-600 dark:text-emerald-400 max-w-sm mx-auto">
+            <p className="max-w-[380px] text-sm text-pretty">
               Tidak ada tagihan atau piutang yang perlu dibayar antar anggota
               grup saat ini.
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="flex flex-col gap-2.5">
             {transaksiSettlement.map((item, idx) => {
               const dariNama = anggotaMap.get(item.dariAnggotaId) || "Debitur";
               const keNama = anggotaMap.get(item.keAnggotaId) || "Kreditur";
@@ -185,53 +203,36 @@ export default function SettlementPage({ params }: SettlementPageProps) {
               return (
                 <div
                   key={`${item.dariAnggotaId}-${item.keAnggotaId}-${idx}`}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-border bg-background hover:border-primary/40 transition shadow-xs"
+                  className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 rounded-lg border border-border bg-surface-subtle px-4 py-3.5"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
-                      <span className="rounded-lg bg-rose-500/10 px-2.5 py-1 text-xs text-rose-600 dark:text-rose-400">
-                        {dariNama}
-                      </span>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <span className="rounded-lg bg-emerald-500/10 px-2.5 py-1 text-xs text-emerald-600 dark:text-emerald-400">
-                        {keNama}
-                      </span>
-                    </div>
-                  </div>
+                  <ChipTransaksi dari={dariNama} ke={keNama} />
 
-                  <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 border-border/60 pt-2 sm:pt-0">
-                    <span className="text-base font-extrabold text-foreground">
-                      Rp {item.jumlah.toLocaleString("id-ID")}
+                  <div className="flex items-center gap-4">
+                    <span className="text-lg font-extrabold whitespace-nowrap tabular-nums">
+                      {formatRupiah(item.jumlah)}
                     </span>
 
-                    <button
-                      type="button"
+                    <Button
+                      size="sm"
                       disabled={tandaiLunas.isPending}
                       onClick={() =>
-                        handleLunas(
-                          item.dariAnggotaId,
-                          item.keAnggotaId,
-                          item.jumlah,
-                        )
+                        setPendingTx({
+                          dariId: item.dariAnggotaId,
+                          keId: item.keAnggotaId,
+                          jumlah: item.jumlah,
+                        })
                       }
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow hover:opacity-90 active:opacity-80 disabled:opacity-50 transition"
                     >
-                      {tandaiLunas.isPending ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <>
-                          <Check className="h-3.5 w-3.5" />
-                          Tandai Lunas
-                        </>
-                      )}
-                    </button>
+                      <Check aria-hidden="true" className="size-3.5" />
+                      Tandai Lunas
+                    </Button>
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Rekap Saldo & Histori Pengeluaran */}
       <SettlementErrorBoundary>
@@ -245,49 +246,110 @@ export default function SettlementPage({ params }: SettlementPageProps) {
       </SettlementErrorBoundary>
 
       {/* Bagian Riwayat Pelunasan */}
-      <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm space-y-4">
-        <div className="flex items-center gap-2">
-          <History className="h-5 w-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">
-            Riwayat Pelunasan ({riwayatPelunasan?.length || 0})
-          </h2>
-        </div>
+      <Card
+        as="section"
+        aria-labelledby="judul-pelunasan"
+        className={cn(kartuSettlement, "gap-3")}
+      >
+        <CardTitle id="judul-pelunasan" icon={History}>
+          Riwayat Pelunasan ({riwayatPelunasan?.length || 0})
+        </CardTitle>
 
         {!riwayatPelunasan || riwayatPelunasan.length === 0 ? (
-          <p className="text-xs text-muted-foreground text-center py-4">
+          <p className="py-3 text-center text-sm text-muted-foreground">
             Belum ada riwayat pelunasan tercatat.
           </p>
         ) : (
-          <div className="divide-y divide-border">
+          <ul className="flex flex-col">
             {riwayatPelunasan.map((tx) => (
-              <div
+              <li
                 key={tx.id}
-                className="flex items-center justify-between py-3 text-xs"
+                className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-muted py-3 text-sm"
               >
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-foreground">
+                <p>
+                  <strong className="font-bold">
                     {tx.dari_anggota?.nama_tampilan || "Anggota"}
-                  </span>
-                  <span className="text-muted-foreground">melunasi ke</span>
-                  <span className="font-semibold text-foreground">
+                  </strong>{" "}
+                  <span className="text-muted-foreground">melunasi ke</span>{" "}
+                  <strong className="font-bold">
                     {tx.ke_anggota?.nama_tampilan || "Anggota"}
-                  </span>
-                </div>
+                  </strong>
+                </p>
 
-                <div className="flex items-center gap-3">
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                    Rp {tx.jumlah.toLocaleString("id-ID")}
+                <div className="flex items-center gap-2.5">
+                  <span className="font-extrabold text-positive tabular-nums">
+                    {formatRupiah(tx.jumlah)}
                   </span>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
-                    <Check className="h-3 w-3" />
+                  <Badge variant="positive" shape="pill">
+                    <Check aria-hidden="true" className="size-3" />
                     Lunas
-                  </span>
+                  </Badge>
                 </div>
-              </div>
+              </li>
             ))}
+          </ul>
+        )}
+      </Card>
+
+      {/* Konfirmasi Tandai Lunas */}
+      <Dialog
+        open={pendingTx !== null}
+        onClose={() => {
+          if (!tandaiLunas.isPending) setPendingTx(null);
+        }}
+        title="Tandai Lunas?"
+        icon={CircleCheck}
+        tone="positive"
+        description="Pastikan pembayaran ini sudah benar-benar dilakukan. Setelah ditandai, saldo kedua anggota langsung diperbarui dan transaksi masuk ke Riwayat Pelunasan."
+        actions={
+          <Button loading={tandaiLunas.isPending} onClick={konfirmasiLunas}>
+            Ya, Tandai Lunas
+          </Button>
+        }
+      >
+        {pendingTx && (
+          <div className="flex flex-wrap items-center justify-between gap-2.5 rounded-lg border border-border bg-surface-subtle px-3.5 py-3">
+            <ChipTransaksi
+              kecil
+              dari={anggotaMap.get(pendingTx.dariId) || "Debitur"}
+              ke={anggotaMap.get(pendingTx.keId) || "Kreditur"}
+            />
+            <span className="text-[17px] font-extrabold tabular-nums">
+              {formatRupiah(pendingTx.jumlah)}
+            </span>
           </div>
         )}
-      </div>
+      </Dialog>
+    </div>
+  );
+}
+
+/** Chip "dari" (negative) → chip "ke" (positive). */
+function ChipTransaksi({
+  dari,
+  ke,
+  kecil = false,
+}: {
+  dari: string;
+  ke: string;
+  kecil?: boolean;
+}) {
+  const chip = kecil
+    ? "rounded-sm px-2.5 py-1 text-[13px] font-bold"
+    : "rounded-sm px-3 py-1.5 text-sm font-bold";
+  return (
+    <div className="flex min-w-0 items-center gap-2.5">
+      <span className={cn(chip, "truncate bg-negative-soft text-negative")}>
+        {dari}
+      </span>
+      <ArrowRight
+        aria-hidden="true"
+        className={cn("shrink-0 text-muted-foreground", kecil ? "size-3.5" : "size-4")}
+      />
+      <span className="sr-only">ke</span>
+      <span className={cn(chip, "truncate bg-positive-soft text-positive")}>
+        {ke}
+      </span>
     </div>
   );
 }

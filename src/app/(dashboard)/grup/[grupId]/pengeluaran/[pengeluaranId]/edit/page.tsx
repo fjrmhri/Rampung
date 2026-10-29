@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useGrupDetail } from "@/hooks/useGrup";
 import { usePengeluaranDetail } from "@/hooks/usePengeluaran";
 import { FormPengeluaran } from "@/components/pengeluaran/FormPengeluaran";
-import { ArrowLeft, Loader2, Edit3 } from "lucide-react";
+import { ArrowLeft, PenLine } from "lucide-react";
+import { BackLink } from "@/components/ui/BackLink";
+import { buttonVariants } from "@/components/ui/Button";
+import { IconTile } from "@/components/ui/IconTile";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface EditPengeluaranPageProps {
   params: Promise<{ grupId: string; pengeluaranId: string }>;
@@ -27,23 +31,23 @@ export default function EditPengeluaranPage({
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[60vh] items-center justify-center text-primary">
+        <Spinner className="size-8" />
       </div>
     );
   }
 
   if (isError || !grup || !pengeluaran) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-12 text-center">
-        <p className="text-sm font-medium text-destructive">
+      <div className="mx-auto flex max-w-lg flex-col items-center gap-4 py-12 text-center">
+        <p className="text-sm font-semibold text-destructive-fg-soft">
           {error?.message || "Pengeluaran tidak ditemukan"}
         </p>
         <Link
           href={`/grup/${grupId}`}
-          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-primary"
+          className={buttonVariants({ variant: "text" })}
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft aria-hidden="true" className="size-4" />
           Kembali ke Grup
         </Link>
       </div>
@@ -51,26 +55,21 @@ export default function EditPengeluaranPage({
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <Link
-        href={`/grup/${grupId}`}
-        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Grup {grup.nama}
-      </Link>
+    <div className="mx-auto flex w-full max-w-[1000px] flex-col gap-5">
+      <BackLink href={`/grup/${grupId}`}>{`Kembali ke Grup ${grup.nama}`}</BackLink>
 
-      <div className="flex items-center justify-between gap-3 mb-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <Edit3 className="h-5 w-5" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">Edit Pengeluaran</h1>
-            <p className="text-xs text-muted-foreground">
-              Versi saat ini: <span className="font-mono font-bold text-foreground">v{pengeluaran.versi}</span>
-            </p>
-          </div>
+      <div className="flex items-center gap-3.5">
+        <IconTile icon={PenLine} size="md" />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <h1 className="text-[clamp(22px,2.6vw,28px)] font-extrabold tracking-[-0.02em]">
+            Edit Pengeluaran
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Versi saat ini:{" "}
+            <span className="font-mono font-bold text-foreground">
+              v{pengeluaran.versi}
+            </span>
+          </p>
         </div>
       </div>
 

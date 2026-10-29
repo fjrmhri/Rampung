@@ -2,9 +2,16 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { useGabungGrup } from "@/hooks/useGrup";
-import { ArrowLeft, UserPlus, Loader2, KeyRound } from "lucide-react";
+import { UserPlus, KeyRound } from "lucide-react";
+import { Alert } from "@/components/ui/Alert";
+import { BackLink } from "@/components/ui/BackLink";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Field } from "@/components/ui/Field";
+import { IconTile } from "@/components/ui/IconTile";
+import { Input } from "@/components/ui/Input";
+import { Spinner } from "@/components/ui/Spinner";
 
 function FormGabungGrup() {
   const router = useRouter();
@@ -30,103 +37,77 @@ function FormGabungGrup() {
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <UserPlus className="h-5 w-5" />
-        </div>
-        <div>
-          <h1 className="text-xl font-bold text-foreground">Gabung Grup</h1>
-          <p className="text-xs text-muted-foreground">
+    <Card className="flex flex-col gap-6 p-[clamp(20px,4vw,32px)] shadow-xs">
+      <div className="flex items-center gap-3.5">
+        <IconTile icon={UserPlus} size="md" />
+        <div className="flex flex-col gap-0.5">
+          <h1 className="text-[22px] font-extrabold tracking-[-0.02em]">
+            Gabung Grup
+          </h1>
+          <p className="text-sm text-muted-foreground">
             Masukkan kode undangan dari admin grup untuk bergabung
           </p>
         </div>
       </div>
 
-      {gabungGrup.isError && (
-        <div
-          role="alert"
-          className="mb-6 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
-        >
-          {gabungGrup.error.message}
-        </div>
-      )}
+      {gabungGrup.isError && <Alert>{gabungGrup.error.message}</Alert>}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-1.5">
-          <label
-            htmlFor="kode"
-            className="block text-sm font-medium text-foreground"
-          >
-            Kode Undangan <span className="text-destructive">*</span>
-          </label>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <Field label="Kode Undangan" htmlFor="kode" required>
           <div className="relative">
-            <KeyRound className="absolute left-3.5 top-3 h-4 w-4 text-muted-foreground" />
-            <input
+            <KeyRound
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
+            />
+            <Input
               id="kode"
               type="text"
               required
               value={kode}
               onChange={(e) => setKode(e.target.value)}
               placeholder="Contoh: a1b2c3d4"
-              className="w-full rounded-xl border border-input bg-background pl-10 pr-4 py-2.5 text-sm font-mono text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+              className="pl-[42px] font-mono tracking-[0.04em]"
             />
           </div>
-        </div>
+        </Field>
 
-        <div className="space-y-1.5">
-          <label
-            htmlFor="nama"
-            className="block text-sm font-medium text-foreground"
-          >
-            Nama Tampilan di Grup <span className="text-xs font-normal text-muted-foreground">(Opsional)</span>
-          </label>
-          <input
+        <Field label="Nama Tampilan di Grup" htmlFor="nama" optional>
+          <Input
             id="nama"
             type="text"
             value={nama}
             onChange={(e) => setNama(e.target.value)}
             placeholder="Kosongkan untuk menggunakan email akun Anda"
-            className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
           />
-        </div>
+        </Field>
 
-        <button
+        <Button
           id="btn-submit-gabung-grup"
           type="submit"
-          disabled={gabungGrup.isPending || !kode.trim()}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow hover:opacity-90 active:opacity-80 disabled:opacity-50 transition"
+          size="lg"
+          fullWidth
+          loading={gabungGrup.isPending}
+          disabled={!kode.trim()}
         >
-          {gabungGrup.isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Memproses...
-            </>
-          ) : (
-            "Gabung ke Grup"
-          )}
-        </button>
+          {gabungGrup.isPending ? "Memproses..." : "Gabung ke Grup"}
+        </Button>
       </form>
-    </div>
+    </Card>
   );
 }
 
 export default function GabungGrupPage() {
   return (
-    <div className="mx-auto max-w-lg px-4 py-8 sm:py-12">
-      <Link
-        href="/dashboard"
-        className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition mb-6"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Kembali ke Dashboard
-      </Link>
+    <div className="mx-auto flex max-w-[560px] flex-col gap-5">
+      <BackLink href="/dashboard">Kembali ke Dashboard</BackLink>
 
-      <Suspense fallback={
-        <div className="flex justify-center p-8">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div className="flex justify-center p-8 text-muted-foreground">
+            <Spinner className="size-6" />
+          </div>
+        }
+      >
         <FormGabungGrup />
       </Suspense>
     </div>

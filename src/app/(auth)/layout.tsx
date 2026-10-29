@@ -1,11 +1,11 @@
 /**
- * Layout grup route (auth) — tidak menambahkan wrapping khusus,
- * cukup render children. Styling halaman ada di masing-masing page.
+ * Layout grup route (auth) — hanya membungkus halaman dengan landmark
+ * <main>. Styling halaman ada di masing-masing page.
  */
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <main className="flex flex-1 flex-col">{children}</main>;
 }

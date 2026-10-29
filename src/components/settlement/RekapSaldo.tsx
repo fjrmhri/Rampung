@@ -6,6 +6,20 @@ import { Download, FileText, ListChecks } from "lucide-react";
 import type { Pengeluaran } from "@/types/pengeluaran";
 import type { SaldoAnggota } from "@/types/saldo";
 import { escapeCsv } from "@/utils/csv";
+import { formatSaldo, labelJenisSplit } from "@/utils/format";
+import { cn } from "@/lib/cn";
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
+
+const WARNA_STATUS: Record<string, string> = {
+  Piutang: "text-positive",
+  Utang: "text-negative",
+  Impas: "text-muted-foreground",
+};
+
+const kartuRekap = "flex flex-col p-[clamp(18px,3vw,28px)] shadow-xs";
 
 interface RekapSaldoProps {
   grupNama: string;
@@ -193,40 +207,35 @@ export default function RekapSaldo({
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm animate-pulse space-y-4">
-        <div className="h-4 w-1/3 rounded-full bg-slate-200 dark:bg-slate-800" />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <Card aria-busy="true" className={cn(kartuRekap, "gap-5")}>
+        <span className="sr-only">Memuat rekap saldo</span>
+        <Skeleton className="h-[18px] w-1/3" />
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,190px),1fr))] gap-3">
           {Array.from({ length: 4 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="h-24 rounded-2xl bg-slate-200 dark:bg-slate-800"
-            />
+            <Skeleton key={idx} className="h-24 rounded-lg" />
           ))}
         </div>
-        <div className="h-40 rounded-2xl bg-slate-200 dark:bg-slate-800" />
-      </div>
+        <Skeleton className="h-40 rounded-lg" />
+      </Card>
     );
   }
 
   if (error) {
     return (
-      <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-6">
-        <p className="text-sm font-semibold text-destructive">
-          Gagal memuat rekap saldo.
-        </p>
-        <p className="mt-2 text-xs text-muted-foreground">{error.message}</p>
-      </div>
+      <Alert size="lg" title="Gagal memuat rekap saldo.">
+        <p className="mt-1 font-normal">{error.message}</p>
+      </Alert>
     );
   }
 
   if (!daftarSaldo || daftarSaldo.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-border bg-card p-6 text-center">
-        <ListChecks className="mx-auto mb-3 h-8 w-8 text-primary" />
-        <p className="text-sm font-semibold text-foreground">
+      <div className="flex flex-col items-center gap-2 rounded-xl border-[1.5px] border-dashed border-input bg-card px-6 py-8 text-center">
+        <ListChecks aria-hidden="true" className="mb-1 size-8 text-primary" />
+        <p className="text-sm font-bold">
           Tidak ada data saldo untuk ditampilkan.
         </p>
-        <p className="mt-2 text-xs text-muted-foreground">
+        <p className="max-w-[400px] text-[13px] text-pretty text-muted-foreground">
           Tambahkan pengeluaran agar rekap saldo dan histori pengeluaran bisa
           terbentuk.
         </p>
@@ -235,40 +244,46 @@ export default function RekapSaldo({
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-base font-bold text-foreground">
-            Rekap Saldo & Histori Pengeluaran
+    <Card
+      as="section"
+      aria-labelledby="judul-rekap"
+      className={cn(kartuRekap, "gap-5")}
+    >
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-[1_1_260px] flex-col gap-1">
+          <h2
+            id="judul-rekap"
+            className="text-lg font-extrabold tracking-[-0.01em]"
+          >
+            Rekap Saldo &amp; Histori Pengeluaran
           </h2>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-[13px] text-muted-foreground">
             Gunakan data yang sama dengan dashboard untuk ekspor CSV / PDF.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
+        <div className="flex gap-2">
+          <Button
+            size="sm"
             onClick={() =>
               downloadCSV(grupNama, daftarSaldo, daftarPengeluaran)
             }
-            className="inline-flex items-center gap-2 rounded-xl bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground hover:opacity-90 transition"
           >
-            <Download className="h-4 w-4" /> CSV
-          </button>
-          <button
-            type="button"
+            <Download aria-hidden="true" className="size-[15px]" /> CSV
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() =>
               downloadPDF(grupNama, daftarSaldo, daftarPengeluaran)
             }
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-background px-3.5 py-2 text-xs font-semibold text-foreground hover:bg-muted transition"
           >
-            <FileText className="h-4 w-4" /> PDF
-          </button>
+            <FileText aria-hidden="true" className="size-[15px]" /> PDF
+          </Button>
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,190px),1fr))] gap-3">
         {daftarSaldo.map((item) => {
           const saldo = item.saldo;
           const status = getTransactionStatus(saldo);
@@ -281,23 +296,38 @@ export default function RekapSaldo({
           return (
             <div
               key={item.anggota_id}
-              className="rounded-2xl border border-border bg-background p-4"
+              className="flex flex-col gap-2.5 rounded-lg border border-border px-4 py-3.5"
             >
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-semibold text-foreground truncate">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold">
                     {item.anggota?.nama_tampilan || "Anggota"}
                   </p>
-                  <p className="mt-1 text-[11px] text-muted-foreground">
+                  <p
+                    className={cn(
+                      "text-xs font-semibold",
+                      WARNA_STATUS[status],
+                    )}
+                  >
                     {status}
                   </p>
                 </div>
-                <p className="text-sm font-semibold text-foreground">
-                  {formatRupiah(saldo)}
+                <p
+                  className={cn(
+                    "shrink-0 text-[15px] font-extrabold tabular-nums",
+                    WARNA_STATUS[status],
+                  )}
+                >
+                  {formatSaldo(saldo)}
                 </p>
               </div>
-              <div className="mt-4 space-y-2 text-xs text-muted-foreground">
-                <p>Total Pengeluaran: {formatRupiah(totalPengeluaran)}</p>
+              <div className="flex flex-col gap-0.5 text-[13px] text-muted-foreground">
+                <p>
+                  Total Pengeluaran:{" "}
+                  <span className="whitespace-nowrap tabular-nums">
+                    {formatRupiah(totalPengeluaran)}
+                  </span>
+                </p>
                 <p>Jumlah Transaksi: {pengeluaran.length}</p>
               </div>
             </div>
@@ -305,10 +335,10 @@ export default function RekapSaldo({
         })}
       </div>
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
-          <ListChecks className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold text-foreground">
+          <ListChecks aria-hidden="true" className="size-4 text-primary" />
+          <h3 className="text-[15px] font-bold">
             Rincian Pengeluaran per Anggota
           </h3>
         </div>
@@ -318,52 +348,48 @@ export default function RekapSaldo({
           return (
             <div
               key={item.anggota_id}
-              className="rounded-2xl border border-border bg-background p-4"
+              className="overflow-hidden rounded-lg border border-border"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <p className="font-semibold text-foreground">
+              <div className="flex items-center justify-between gap-2 bg-surface-header px-4 py-3">
+                <p className="truncate text-sm font-bold">
                   {item.anggota?.nama_tampilan || "Anggota"}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="shrink-0 text-[13px] text-muted-foreground">
                   {pengeluaran.length} pengeluaran
                 </p>
               </div>
               {pengeluaran.length === 0 ? (
-                <p className="mt-3 text-xs text-muted-foreground">
+                <p className="px-4 py-3 text-[13px] text-muted-foreground">
                   Belum ada pengeluaran yang dibayar oleh anggota ini.
                 </p>
               ) : (
-                <div className="mt-3 grid gap-2">
-                  {pengeluaran.map((transaksi) => (
-                    <div
-                      key={transaksi.id}
-                      className="rounded-2xl border border-border/70 bg-card p-3 text-xs"
-                    >
-                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                        <p className="font-semibold text-foreground">
-                          {transaksi.deskripsi}
-                        </p>
-                        <span className="text-muted-foreground">
-                          {new Date(transaksi.dibuat_pada).toLocaleDateString(
-                            "id-ID",
-                            { day: "numeric", month: "short", year: "numeric" },
-                          )}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-foreground">
-                        {formatRupiah(transaksi.jumlah_total)}
+                pengeluaran.map((transaksi) => (
+                  <div
+                    key={transaksi.id}
+                    className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 border-t border-muted px-4 py-3"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold break-words">
+                        {transaksi.deskripsi}
                       </p>
-                      <p className="mt-1 text-[11px] text-muted-foreground">
-                        Jenis split: {transaksi.jenis_split}
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(transaksi.dibuat_pada).toLocaleDateString(
+                          "id-ID",
+                          { day: "numeric", month: "short", year: "numeric" },
+                        )}{" "}
+                        · Jenis split: {labelJenisSplit(transaksi.jenis_split)}
                       </p>
                     </div>
-                  ))}
-                </div>
+                    <p className="text-sm font-extrabold tabular-nums">
+                      {formatRupiah(transaksi.jumlah_total)}
+                    </p>
+                  </div>
+                ))
               )}
             </div>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }

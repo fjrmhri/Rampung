@@ -11,15 +11,33 @@ import {
   VersiConflictError,
 } from "@/hooks/usePengeluaran";
 import {
-  DollarSign,
-  PieChart,
+  Banknote,
+  ChartPie,
   Users,
-  CheckCircle2,
-  AlertTriangle,
-  Loader2,
+  CircleCheck,
+  TriangleAlert,
   RefreshCw,
-  X,
 } from "lucide-react";
+import { cn } from "@/lib/cn";
+import { formatRupiah, labelJenisSplit } from "@/utils/format";
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Dialog } from "@/components/ui/Dialog";
+import { Field } from "@/components/ui/Field";
+import { Input, Select } from "@/components/ui/Input";
+import {
+  SegmentedControl,
+  type SegmentedOption,
+} from "@/components/ui/SegmentedControl";
+
+const OPSI_SPLIT: SegmentedOption<JenisSplit>[] = [
+  { value: "sama_rata", label: "Sama Rata", icon: Users },
+  { value: "persentase", label: "Persentase (%)", icon: ChartPie },
+  { value: "nominal_pasti", label: "Nominal Pasti", icon: Banknote },
+];
+
+const kartuForm = "flex flex-col p-[clamp(18px,3vw,28px)] shadow-xs";
 
 interface FormPengeluaranProps {
   grupId: string;
@@ -184,215 +202,161 @@ export function FormPengeluaran({
     }
   };
 
+  const namaPembayar =
+    anggotaList.find((a) => a.id === dibayarOleh)?.nama_tampilan ?? "-";
+
   return (
     <div className="relative">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {/* Banner Error */}
         {errorMessage && (
-          <div
-            role="alert"
-            className="flex items-start justify-between rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
-          >
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 shrink-0" />
-              <span>{errorMessage}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setErrorMessage(null)}
-              className="text-destructive/70 hover:text-destructive"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+          <Alert onDismiss={() => setErrorMessage(null)}>{errorMessage}</Alert>
         )}
 
-        {/* Form Inputs Utama */}
-        <div className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
-          {/* Deskripsi */}
-          <div className="space-y-1.5">
-            <label
-              htmlFor="deskripsi"
-              className="block text-sm font-medium text-foreground"
-            >
-              Deskripsi Pengeluaran <span className="text-destructive">*</span>
-            </label>
-            <input
-              id="deskripsi"
-              type="text"
-              required
-              value={deskripsi}
-              onChange={(e) => setDeskripsi(e.target.value)}
-              placeholder="Contoh: Makan Siang Nasi Padang, Tiket Masuk Wisata"
-              className="w-full rounded-xl border border-input bg-background px-4 py-2.5 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            />
-          </div>
-
-          {/* Jumlah Total (Rp) & Dibayar Oleh */}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <label
-                htmlFor="jumlahTotal"
-                className="block text-sm font-medium text-foreground"
-              >
-                Jumlah Total (Rp) <span className="text-destructive">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-2.5 font-bold text-sm text-muted-foreground">
-                  Rp
-                </span>
-                <input
-                  id="jumlahTotal"
+        <div className="flex flex-wrap items-start gap-6">
+          {/* Kolom kiri: field dan pembagian */}
+          <div className="flex min-w-0 flex-[999_1_520px] flex-col gap-6">
+            {/* Form Inputs Utama */}
+            <Card as="section" className={cn(kartuForm, "gap-5")}>
+              <Field label="Deskripsi Pengeluaran" htmlFor="deskripsi" required>
+                <Input
+                  id="deskripsi"
                   type="text"
-                  inputMode="numeric"
                   required
-                  value={
-                    jumlahTotal > 0
-                      ? jumlahTotal.toLocaleString("id-ID")
-                      : jumlahTotalStr
-                  }
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/\D/g, "");
-                    setJumlahTotalStr(raw);
-                  }}
-                  placeholder="0"
-                  className="w-full rounded-xl border border-input bg-background pl-10 pr-4 py-2.5 text-sm font-bold text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                  placeholder="Contoh: Makan Siang Nasi Padang, Tiket Masuk Wisata"
                 />
-              </div>
-            </div>
+              </Field>
 
-            <div className="space-y-1.5">
-              <label
-                htmlFor="dibayarOleh"
-                className="block text-sm font-medium text-foreground"
-              >
-                Dibayar Oleh <span className="text-destructive">*</span>
-              </label>
-              <select
-                id="dibayarOleh"
-                value={dibayarOleh}
-                onChange={(e) => setDibayarOleh(e.target.value)}
-                className="w-full rounded-xl border border-input bg-background px-3.5 py-2.5 text-sm text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                {anggotaList.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.nama_tampilan}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Opsi Jenis Split */}
-        <div className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <label className="block text-sm font-medium text-foreground mb-2">
-            Pilih Jenis Pembagian (Split)
-          </label>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => setJenisSplit("sama_rata")}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition ${
-                jenisSplit === "sama_rata"
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-background text-muted-foreground hover:bg-accent"
-              }`}
-            >
-              <Users className="h-4 w-4 mb-1" />
-              Sama Rata
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setJenisSplit("persentase")}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition ${
-                jenisSplit === "persentase"
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-background text-muted-foreground hover:bg-accent"
-              }`}
-            >
-              <PieChart className="h-4 w-4 mb-1" />
-              Persentase (%)
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setJenisSplit("nominal_pasti")}
-              className={`flex flex-col items-center justify-center p-3 rounded-xl border text-xs font-semibold transition ${
-                jenisSplit === "nominal_pasti"
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border bg-background text-muted-foreground hover:bg-accent"
-              }`}
-            >
-              <DollarSign className="h-4 w-4 mb-1" />
-              Nominal Pasti
-            </button>
-          </div>
-
-          {/* Header Pilih Anggota & Toggle All */}
-          <div className="flex items-center justify-between pt-4 border-t border-border">
-            <span className="text-xs font-semibold text-foreground">
-              Anggota yang Ditanggung ({selectedAnggotaIds.length}/{anggotaList.length})
-            </span>
-            <button
-              type="button"
-              onClick={toggleSelectAll}
-              className="text-xs font-medium text-primary hover:underline"
-            >
-              {selectedAnggotaIds.length === anggotaList.length
-                ? "Batal Pilih Semua"
-                : "Pilih Semua"}
-            </button>
-          </div>
-
-          {/* Daftar Anggota dengan Input Sesuai Split */}
-          <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
-            {anggotaList.map((anggota) => {
-              const isSelected = selectedAnggotaIds.includes(anggota.id);
-
-              const hasilBaris = kalkulasiHasilSplit.pembagian.find(
-                (p) => p.anggota_id === anggota.id
-              );
-
-              return (
-                <div
-                  key={anggota.id}
-                  className={`flex items-center justify-between p-3 rounded-xl border transition ${
-                    isSelected
-                      ? "border-primary/40 bg-primary/5"
-                      : "border-border bg-background opacity-60"
-                  }`}
-                >
-                  <label className="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleSelectAnggota(anggota.id)}
-                      className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm font-medium text-foreground truncate">
-                      {anggota.nama_tampilan}
+              {/* Jumlah Total (Rp) & Dibayar Oleh */}
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4">
+                <Field label="Jumlah Total (Rp)" htmlFor="jumlahTotal" required>
+                  <div className="relative">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-[15px] font-bold text-muted-foreground"
+                    >
+                      Rp
                     </span>
-                  </label>
+                    <Input
+                      id="jumlahTotal"
+                      size="amount"
+                      type="text"
+                      inputMode="numeric"
+                      required
+                      value={
+                        jumlahTotal > 0
+                          ? jumlahTotal.toLocaleString("id-ID")
+                          : jumlahTotalStr
+                      }
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, "");
+                        setJumlahTotalStr(raw);
+                      }}
+                      placeholder="0"
+                    />
+                  </div>
+                </Field>
 
-                  {/* Render Input Khusus Jenis Split */}
-                  {isSelected && (
-                    <div className="flex items-center gap-2">
-                      {jenisSplit === "sama_rata" && (
-                        <span className="text-xs font-bold text-foreground">
-                          Rp {(hasilBaris?.jumlah_tanggungan || 0).toLocaleString("id-ID")}
+                <Field label="Dibayar Oleh" htmlFor="dibayarOleh" required>
+                  <Select
+                    id="dibayarOleh"
+                    value={dibayarOleh}
+                    onChange={(e) => setDibayarOleh(e.target.value)}
+                  >
+                    {anggotaList.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.nama_tampilan}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
+              </div>
+            </Card>
+
+            {/* Opsi Jenis Split */}
+            <Card as="section" className={cn(kartuForm, "gap-[18px]")}>
+              <p id="lbl-split" className="text-sm font-semibold">
+                Pilih Jenis Pembagian (Split)
+              </p>
+              <SegmentedControl
+                options={OPSI_SPLIT}
+                value={jenisSplit}
+                onChange={setJenisSplit}
+                labelledBy="lbl-split"
+              />
+
+              {/* Header Pilih Anggota & Toggle All */}
+              <div className="flex items-center justify-between gap-3 border-t border-muted pt-4">
+                <span className="text-sm font-bold">
+                  Anggota yang Ditanggung ({selectedAnggotaIds.length}/
+                  {anggotaList.length})
+                </span>
+                <Button variant="text" onClick={toggleSelectAll}>
+                  {selectedAnggotaIds.length === anggotaList.length
+                    ? "Batal Pilih Semua"
+                    : "Pilih Semua"}
+                </Button>
+              </div>
+
+              {/* Daftar Anggota dengan Input Sesuai Split */}
+              <div className="flex flex-col gap-2">
+                {anggotaList.map((anggota) => {
+                  const isSelected = selectedAnggotaIds.includes(anggota.id);
+
+                  const hasilBaris = kalkulasiHasilSplit.pembagian.find(
+                    (p) => p.anggota_id === anggota.id
+                  );
+                  const nominalBaris = formatRupiah(
+                    hasilBaris?.jumlah_tanggungan || 0
+                  );
+
+                  return (
+                    <div
+                      key={anggota.id}
+                      className={cn(
+                        "flex min-h-14 flex-wrap items-center justify-between gap-2.5 rounded-lg border px-3 py-2.5 transition-colors duration-150",
+                        isSelected
+                          ? "border-primary/30 bg-primary-soft/45"
+                          : "border-border bg-card"
+                      )}
+                    >
+                      <label className="flex min-h-9 min-w-0 flex-[1_1_120px] cursor-pointer items-center gap-3">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelectAnggota(anggota.id)}
+                          className="m-0 size-5 shrink-0 accent-primary focus-visible:outline-2 focus-visible:outline-offset-2"
+                        />
+                        <span
+                          className={cn(
+                            "truncate text-sm font-semibold",
+                            !isSelected && "text-muted-foreground"
+                          )}
+                        >
+                          {anggota.nama_tampilan}
+                        </span>
+                      </label>
+
+                      {/* Render Input Khusus Jenis Split */}
+                      {isSelected && jenisSplit === "sama_rata" && (
+                        <span className="text-sm font-extrabold tabular-nums">
+                          {nominalBaris}
                         </span>
                       )}
 
-                      {jenisSplit === "persentase" && (
+                      {isSelected && jenisSplit === "persentase" && (
                         <div className="flex items-center gap-2">
-                          <input
+                          <Input
+                            size="sm"
                             type="number"
                             min="0"
                             max="100"
                             step="any"
                             placeholder="0"
+                            aria-label={`Persentase ${anggota.nama_tampilan}`}
+                            className="w-[72px]"
                             value={persentaseMap[anggota.id] || ""}
                             onChange={(e) =>
                               setPersentaseMap({
@@ -400,22 +364,24 @@ export function FormPengeluaran({
                                 [anggota.id]: e.target.value,
                               })
                             }
-                            className="w-16 rounded-lg border border-input bg-background px-2 py-1 text-right text-xs font-bold text-foreground focus:ring-1 focus:ring-primary"
                           />
-                          <span className="text-xs text-muted-foreground">%</span>
-                          <span className="text-xs font-bold text-foreground min-w-[70px] text-right">
-                            Rp {(hasilBaris?.jumlah_tanggungan || 0).toLocaleString("id-ID")}
+                          <span className="text-[13px] text-muted-foreground">%</span>
+                          <span className="min-w-[88px] text-right text-sm font-extrabold tabular-nums">
+                            {nominalBaris}
                           </span>
                         </div>
                       )}
 
-                      {jenisSplit === "nominal_pasti" && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs text-muted-foreground">Rp</span>
-                          <input
+                      {isSelected && jenisSplit === "nominal_pasti" && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[13px] text-muted-foreground">Rp</span>
+                          <Input
+                            size="sm"
                             type="text"
                             inputMode="numeric"
                             placeholder="0"
+                            aria-label={`Nominal ${anggota.nama_tampilan}`}
+                            className="w-32"
                             value={
                               nominalMap[anggota.id]
                                 ? parseInt(
@@ -431,91 +397,100 @@ export function FormPengeluaran({
                                 [anggota.id]: raw,
                               });
                             }}
-                            className="w-28 rounded-lg border border-input bg-background px-2 py-1 text-right text-xs font-bold text-foreground focus:ring-1 focus:ring-primary"
                           />
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </Card>
           </div>
 
-          {/* Status Validasi Pembagian */}
-          {!kalkulasiHasilSplit.isValid && kalkulasiHasilSplit.errorText && (
-            <div className="flex items-center gap-2 rounded-xl bg-destructive/10 p-3 text-xs font-medium text-destructive">
-              <AlertTriangle className="h-4 w-4 shrink-0" />
-              <span>{kalkulasiHasilSplit.errorText}</span>
+          {/* Kolom kanan: ringkasan sticky */}
+          <aside className="sticky top-[88px] flex min-w-0 flex-[1_1_280px] flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-summary">
+            <div className="flex flex-col gap-1">
+              <p className="text-[13px] font-semibold text-muted-foreground">
+                Jumlah Total (Rp)
+              </p>
+              <p className="text-[28px] leading-[1.15] font-extrabold tracking-[-0.02em] tabular-nums">
+                {formatRupiah(jumlahTotal)}
+              </p>
             </div>
-          )}
 
-          {kalkulasiHasilSplit.isValid && (
-            <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 p-3 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              <CheckCircle2 className="h-4 w-4 shrink-0" />
-              <span>Pembagian valid &amp; total tanggungan sesuai.</span>
+            <dl className="flex flex-col gap-2 border-y border-muted py-3 text-sm">
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted-foreground">Dibayar Oleh</dt>
+                <dd className="truncate text-right font-bold">{namaPembayar}</dd>
+              </div>
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted-foreground">Jenis Pembagian</dt>
+                <dd className="font-bold">{labelJenisSplit(jenisSplit)}</dd>
+              </div>
+              <div className="flex justify-between gap-2">
+                <dt className="text-muted-foreground">Anggota yang Ditanggung</dt>
+                <dd className="font-bold tabular-nums">
+                  {selectedAnggotaIds.length}/{anggotaList.length}
+                </dd>
+              </div>
+            </dl>
+
+            {/* Status Validasi Pembagian */}
+            <div aria-live="polite">
+              {kalkulasiHasilSplit.isValid ? (
+                <div className="flex items-start gap-2 rounded-md bg-positive-soft px-3 py-2.5 text-[13px] font-semibold text-positive">
+                  <CircleCheck aria-hidden="true" className="mt-px size-4 shrink-0" />
+                  <span>Pembagian valid &amp; total tanggungan sesuai.</span>
+                </div>
+              ) : (
+                kalkulasiHasilSplit.errorText && (
+                  <div className="flex items-start gap-2 rounded-md bg-destructive-soft px-3 py-2.5 text-[13px] font-semibold text-destructive-fg-soft">
+                    <TriangleAlert aria-hidden="true" className="mt-px size-4 shrink-0" />
+                    <span>{kalkulasiHasilSplit.errorText}</span>
+                  </div>
+                )
+              )}
             </div>
-          )}
+
+            {/* Submit Button */}
+            <Button
+              id="btn-submit-pengeluaran"
+              type="submit"
+              size="xl"
+              fullWidth
+              loading={isPending}
+              disabled={!kalkulasiHasilSplit.isValid}
+            >
+              {isPending
+                ? "Menyimpan Pengeluaran..."
+                : isEditing
+                  ? "Simpan Perubahan"
+                  : "Tambah Pengeluaran"}
+            </Button>
+          </aside>
         </div>
-
-        {/* Submit Button */}
-        <button
-          id="btn-submit-pengeluaran"
-          type="submit"
-          disabled={isPending || !kalkulasiHasilSplit.isValid}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow hover:opacity-90 active:opacity-80 disabled:opacity-50 transition"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Menyimpan Pengeluaran...
-            </>
-          ) : isEditing ? (
-            "Simpan Perubahan"
-          ) : (
-            "Tambah Pengeluaran"
-          )}
-        </button>
       </form>
 
       {/* Dialog Konflik Optimistic Locking */}
-      {conflictDialogOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl space-y-4">
-            <div className="flex items-center gap-3 text-destructive">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/10">
-                <AlertTriangle className="h-5 w-5" />
-              </div>
-              <h3 className="text-lg font-bold text-foreground">Konflik Versi Data</h3>
-            </div>
-
-            <p className="text-sm text-muted-foreground">
-              Data pengeluaran ini telah diubah oleh anggota lain saat Anda sedang mengeditnya. Perubahan Anda tidak disimpan untuk mencegah data tertimpa.
-            </p>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setConflictDialogOpen(false)}
-                className="rounded-xl border border-border bg-background px-4 py-2 text-xs font-medium text-foreground hover:bg-muted"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setConflictDialogOpen(false);
-                  window.location.reload();
-                }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow hover:opacity-90"
-              >
-                <RefreshCw className="h-3.5 w-3.5" />
-                Muat Ulang Data Terbaru
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog
+        open={conflictDialogOpen}
+        onClose={() => setConflictDialogOpen(false)}
+        title="Konflik Versi Data"
+        icon={TriangleAlert}
+        tone="destructive"
+        description="Data pengeluaran ini telah diubah oleh anggota lain saat Anda sedang mengeditnya. Perubahan Anda tidak disimpan untuk mencegah data tertimpa."
+        actions={
+          <Button
+            onClick={() => {
+              setConflictDialogOpen(false);
+              window.location.reload();
+            }}
+          >
+            <RefreshCw aria-hidden="true" className="size-3.5" />
+            Muat Ulang Data Terbaru
+          </Button>
+        }
+      />
     </div>
   );
 }
