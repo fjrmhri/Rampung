@@ -28,10 +28,22 @@ export async function DELETE(request: Request, { params }: RouteParams) {
     );
   }
 
-  const { error } = await supabase.from("grup").delete().eq("id", grupId);
+  const { data, error } = await supabase
+    .from("grup")
+    .delete()
+    .eq("id", grupId)
+    .select("id");
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  // RLS hanya mengizinkan pembuat grup menghapus; 0 baris = tidak berhak / tidak ada
+  if (!data || data.length === 0) {
+    return NextResponse.json(
+      { error: "Grup tidak ditemukan atau Anda tidak berhak menghapusnya." },
+      { status: 403 },
+    );
   }
 
   return NextResponse.json({ success: true });

@@ -58,8 +58,9 @@ Buat file `.env.local` di root proyek dan isi variabel berikut:
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | URL project Supabase |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon (public) key project Supabase |
+| `NEXT_PUBLIC_SITE_URL` | Origin aplikasi untuk tautan magic link, misalnya `http://localhost:3000`. Opsional; jika kosong, origin diambil dari header request. Wajib diisi di produksi |
 
-Kode saat ini tidak membaca `SUPABASE_SERVICE_ROLE_KEY` maupun `NEXT_PUBLIC_SITE_URL`. Jangan pernah mengekspos service role key ke client.
+Kode saat ini tidak membaca `SUPABASE_SERVICE_ROLE_KEY`. Jangan pernah mengekspos service role key ke client.
 
 Di dashboard Supabase (Authentication, URL Configuration), tambahkan `<origin aplikasi>/auth/callback` ke daftar Redirect URLs agar magic link bisa kembali ke aplikasi.
 

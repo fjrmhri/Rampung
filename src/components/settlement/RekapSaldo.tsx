@@ -20,7 +20,11 @@ function formatRupiah(value: number) {
 
 function escapeCsv(value: string | number | undefined) {
   if (value === undefined || value === null) return "";
-  const stringValue = String(value);
+  let stringValue = String(value);
+  // Cegah CSV/formula injection: teks yang diawali = + - @ dibaca spreadsheet sebagai rumus
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(stringValue)) {
+    stringValue = `'${stringValue}`;
+  }
   if (
     stringValue.includes(",") ||
     stringValue.includes('"') ||

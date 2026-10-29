@@ -1,3 +1,5 @@
+import { decodeAman } from "@/utils/decodeAman";
+
 interface VerifikasiPageProps {
   searchParams: Promise<{ email?: string; error?: string; next?: string }>;
 }
@@ -44,7 +46,7 @@ export default async function VerifikasiPage({
             role="alert"
             className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           >
-            {decodeURIComponent(error)}
+            {decodeAman(error)}
           </div>
         )}
 

@@ -1,4 +1,5 @@
 import { kirimOtp } from "./actions";
+import { decodeAman } from "@/utils/decodeAman";
 
 interface LoginPageProps {
   searchParams: Promise<{ error?: string; next?: string }>;
@@ -31,7 +32,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             role="alert"
             className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive"
           >
-            {decodeURIComponent(error)}
+            {decodeAman(error)}
           </div>
         )}
 

@@ -50,10 +50,14 @@ export async function kirimOtp(formData: FormData) {
     return redirect(`/login?${query.toString()}`);
   }
 
-  const headersList = await headers();
-  const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
-  const protocol = headersList.get("x-forwarded-proto") ?? "http";
-  const origin = host ? `${protocol}://${host}` : "http://localhost:3000";
+  // Utamakan NEXT_PUBLIC_SITE_URL agar tautan email tidak bergantung pada header Host
+  let origin = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!origin) {
+    const headersList = await headers();
+    const host = headersList.get("x-forwarded-host") ?? headersList.get("host");
+    const protocol = headersList.get("x-forwarded-proto") ?? "http";
+    origin = host ? `${protocol}://${host}` : "http://localhost:3000";
+  }
   const callbackUrl = new URL("/auth/callback", origin);
 
   if (next) {
