@@ -85,6 +85,7 @@ npm run test
 ```
 .
 ├── supabase/migrations/        # Skema database, RLS, dan RPC
+├── supabase/tests/             # Test view dan RLS di Postgres in-memory (PGlite)
 └── src/
     ├── proxy.ts                # Proxy Next.js: refresh sesi Supabase dan proteksi route /dashboard
     ├── app/
