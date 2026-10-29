@@ -34,4 +34,32 @@ describe("hitungSettlementGrup Utility Test", () => {
     const transaksi = hitungSettlementGrup(daftarSaldo);
     expect(transaksi).toHaveLength(0);
   });
+
+  it("hanya menghasilkan transaksi antar anggota nyata walau total saldo tidak nol", () => {
+    // Total +1: selisih dikoreksi pada saldo terbesar (user-A)
+    const daftarSaldo: SaldoAnggota[] = [
+      { anggota_id: "user-A", grup_id: "grup-1", saldo: 150000 },
+      { anggota_id: "user-B", grup_id: "grup-1", saldo: -100000 },
+      { anggota_id: "user-C", grup_id: "grup-1", saldo: -49999 },
+    ];
+
+    const transaksi = hitungSettlementGrup(daftarSaldo);
+    const anggota = new Set(daftarSaldo.map((s) => s.anggota_id));
+
+    expect(transaksi).toHaveLength(2);
+    for (const t of transaksi) {
+      expect(anggota.has(t.dariAnggotaId)).toBe(true);
+      expect(anggota.has(t.keAnggotaId)).toBe(true);
+    }
+    expect(transaksi).toContainEqual({
+      dariAnggotaId: "user-B",
+      keAnggotaId: "user-A",
+      jumlah: 100000,
+    });
+    expect(transaksi).toContainEqual({
+      dariAnggotaId: "user-C",
+      keAnggotaId: "user-A",
+      jumlah: 49999,
+    });
+  });
 });
