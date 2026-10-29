@@ -49,6 +49,7 @@ Siapkan database dengan menjalankan file migrasi secara berurutan di SQL Editor 
 2. `supabase/migrations/0002_tambah_anggota_tanpa_akun.sql`: RPC `tambah_anggota_tanpa_akun` dan perbaikan policy `grup`
 3. `supabase/migrations/0003_hardening_rls.sql`: hardening RLS dan hak akses (butuh PostgreSQL 15+)
 4. `supabase/migrations/0004_rpc_pengeluaran.sql`: RPC atomik `simpan_pengeluaran` dan `edit_pengeluaran` (wajib ada sebelum aplikasi dijalankan)
+5. `supabase/migrations/0005_perbaiki_tanda_pelunasan.sql`: perbaikan arah pelunasan di view `saldo_bersih`
 
 ## Konfigurasi
 
