@@ -96,7 +96,7 @@ npm run test
     ├── hooks/                  # Query dan mutation TanStack Query + Realtime
     ├── lib/supabase/           # Klien Supabase untuk browser, server, dan middleware
     ├── types/                  # Tipe data grup, pengeluaran, saldo, settlement
-    └── utils/                  # Algoritma penyederhanaan utang dan unit test-nya
+    └── utils/                  # Algoritma utang, kalkulasi split, helper CSV, beserta unit test
 ```
 
 ## Build dan Deploy

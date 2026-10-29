@@ -5,6 +5,7 @@ import { jsPDF } from "jspdf";
 import { Download, FileText, ListChecks } from "lucide-react";
 import type { Pengeluaran } from "@/types/pengeluaran";
 import type { SaldoAnggota } from "@/types/saldo";
+import { escapeCsv } from "@/utils/csv";
 
 interface RekapSaldoProps {
   grupNama: string;
@@ -16,23 +17,6 @@ interface RekapSaldoProps {
 
 function formatRupiah(value: number) {
   return `Rp ${value.toLocaleString("id-ID")}`;
-}
-
-function escapeCsv(value: string | number | undefined) {
-  if (value === undefined || value === null) return "";
-  let stringValue = String(value);
-  // Cegah CSV/formula injection: teks yang diawali = + - @ dibaca spreadsheet sebagai rumus
-  if (typeof value === "string" && /^[=+\-@\t\r]/.test(stringValue)) {
-    stringValue = `'${stringValue}`;
-  }
-  if (
-    stringValue.includes(",") ||
-    stringValue.includes('"') ||
-    stringValue.includes("\n")
-  ) {
-    return `"${stringValue.replace(/"/g, '""')}"`;
-  }
-  return stringValue;
 }
 
 function getTransactionStatus(saldo: number) {

@@ -86,6 +86,8 @@ export function useRealtimeSaldo(grupId: string) {
           event: "*",
           schema: "public",
           table: "pembagian_pengeluaran",
+          // Tanpa filter: tabel ini tidak punya grup_id, dan event DELETE
+          // (termasuk cascade dari hapus pengeluaran) memang tidak bisa difilter.
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ["saldo", grupId] });

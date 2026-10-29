@@ -148,8 +148,8 @@ export default function SettlementPage({ params }: SettlementPageProps) {
             <Sparkles className="h-5 w-5 text-amber-500 animate-pulse" />
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Sistem otomatis menyederhanakan transaksi ke jumlah minimum (n &le;
-            1)
+            Sistem otomatis menyederhanakan transaksi ke jumlah minimum
+            (maksimal n &minus; 1 transaksi untuk n anggota)
           </p>
         </div>
 

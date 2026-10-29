@@ -6,7 +6,6 @@ import "./globals.css";
 const interSans = Inter({
   variable: "--font-inter-sans",
   subsets: ["latin"],
-  weight: ["300"],
 });
 
 const geistMono = Geist_Mono({
